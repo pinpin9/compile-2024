@@ -2,17 +2,14 @@ package tools;
 
 import settings.Settings;
 
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-// 从testfile中读入sourceCode
+
 
 public class IO {
-
+    // 从testfile中读入sourceCode
     public static String getInput() throws IOException {
         byte[] bytes = null;
         try(FileInputStream input = new FileInputStream(Settings.inputFile)){
@@ -27,7 +24,7 @@ public class IO {
 
     /**
      *
-     * @param list：待输出的输出
+     * @param list：待输出的list列表
      * @param outputFile：指定输出文件的路径
      * @throws IOException
      */
