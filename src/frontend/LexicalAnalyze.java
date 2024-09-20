@@ -22,7 +22,7 @@ public class LexicalAnalyze {
             , "\\f", "\\\"", "\\\'", "\\\\", "\\0");
     private List<Token> tokens=new ArrayList<>();
     // 错误处理
-    private ErrorNode errorNode = ErrorNode.getErrorNode();
+    private final ErrorNode errorNode = ErrorNode.getErrorNode();
     // 返回结果
     public List<Token> getTokens() {
         return tokens;
@@ -231,8 +231,7 @@ public class LexicalAnalyze {
             addToken(Token.TokenType.AND, lineNum, "&&");
             return j;
         } else {
-            errorNode.addError(new Error(Error.ErrorType.a, lineNum, "&"));
-            errorNode.changeIsError();
+            errorNode.accessError(new Error(Error.ErrorType.a, lineNum, "&"));
             return i;
         }
     }
@@ -244,8 +243,7 @@ public class LexicalAnalyze {
             addToken(Token.TokenType.OR, lineNum, "||");
             return j;
         } else {
-            errorNode.addError(new Error(Error.ErrorType.a, lineNum, "|"));
-            errorNode.changeIsError();
+            errorNode.accessError(new Error(Error.ErrorType.a, lineNum, "|"));
             return i;
         }
     }

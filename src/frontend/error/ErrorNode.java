@@ -16,19 +16,18 @@ public class ErrorNode {
         return instance;
     }
     private boolean isError=false;
-    public void changeIsError(){
-        isError=true;
-    }
+
     public boolean getIsError(){
         return isError;
     }
     private List<Error> errorList=new ArrayList<>();
 
-    public void addError(Error error){
-        errorList.add(error);
-    }
     public List<Error> getErrorList(){
         return errorList;
+    }
+    public void accessError(Error e){
+        errorList.add(e);
+        isError=true;
     }
     public void printErrorList() throws IOException {
         IO.output(errorList, Settings.errorFile);
