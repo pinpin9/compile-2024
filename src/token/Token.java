@@ -1,4 +1,6 @@
-package frontend.token;
+package token;
+
+import frontend.ParserAnalyze;
 
 public class Token {
     /**
@@ -34,6 +36,11 @@ public class Token {
 
     @Override
     public String toString() {
-        return type.toString() + " " + value+ "\n";
+        return type.toString() + " " + value;
+    }
+
+    public void print(){
+        System.out.println(toString());
+        ParserAnalyze.parserOutput.output(toString());
     }
 }

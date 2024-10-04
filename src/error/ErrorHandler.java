@@ -1,4 +1,4 @@
-package frontend.error;
+package error;
 
 import settings.Settings;
 import tools.IO;
@@ -9,10 +9,10 @@ import java.util.List;
 
 //错误处理的过程：向ErrorList中添加一个error对象，改变isError的值，表示出错
 
-public class ErrorNode {
-    private static ErrorNode instance = new ErrorNode();
+public class ErrorHandler {
+    private static ErrorHandler instance = new ErrorHandler();
 
-    public static ErrorNode getErrorNode() {
+    public static ErrorHandler getErrorHandler() {
         return instance;
     }
     private boolean isError=false;
@@ -25,11 +25,12 @@ public class ErrorNode {
     public List<Error> getErrorList(){
         return errorList;
     }
-    public void accessError(Error e){
+    public void addError(Error e){
         errorList.add(e);
         isError=true;
     }
     public void printErrorList() throws IOException {
-        IO.output(errorList, Settings.errorFile);
+        IO io = new IO(Settings.errorFile);
+        io.output(errorList);
     }
 }

@@ -9,8 +9,18 @@ import java.util.List;
 
 
 public class IO {
+    String outputFile;
+    PrintWriter writer;
+    public IO(String outputFile){
+        this.outputFile = outputFile;
+        try {
+            writer = new PrintWriter(new FileWriter(outputFile));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     // 从testfile中读入sourceCode
-    public static String getInput() throws IOException {
+    public static String getInput(){
         byte[] bytes = null;
         try(FileInputStream input = new FileInputStream(Settings.inputFile)){
             // 读取所有字节
@@ -25,21 +35,17 @@ public class IO {
     /**
      *
      * @param list：待输出的list列表
-     * @param outputFile：指定输出文件的路径
      * @throws IOException
      */
-    public static void output(List<?> list, String outputFile) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile, false))) {
-            for (Object item : list) {
-                outputLine(item.toString(), writer);
-            }
-        } catch (IOException e) {
-            throw new IOException("写入文件时发生错误：" + e.getMessage(), e);
+    public void output(List<?> list){
+        for (Object item : list) {
+            writer.println(item.toString());
         }
+        writer.flush();
     }
 
-    public static void outputLine(String s, BufferedWriter writer) throws IOException {
-        writer.write(s);
-        writer.flush(); // 刷新缓冲区，确保数据立即写入文件
+    public void output(String s){
+        writer.println(s);
+        writer.flush();
     }
 }

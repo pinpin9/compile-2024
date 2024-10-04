@@ -1,12 +1,11 @@
 package frontend;
 
-import frontend.error.Error;
-import frontend.error.ErrorNode;
-import frontend.token.Token;
+import error.Error;
+import error.ErrorHandler;
+import token.Token;
 import settings.Settings;
 import tools.IO;
 
-import java.io.IOException;
 import java.util.*;
 
 // 词法分析
@@ -22,7 +21,7 @@ public class LexicalAnalyze {
             , "\\f", "\\\"", "\\\'", "\\\\", "\\0");
     private List<Token> tokens=new ArrayList<>();
     // 错误处理
-    private final ErrorNode errorNode = ErrorNode.getErrorNode();
+    private final ErrorHandler errorNode = ErrorHandler.getErrorHandler();
     // 返回结果
     public List<Token> getTokens() {
         return tokens;
@@ -180,8 +179,12 @@ public class LexicalAnalyze {
     // 字符处理
     private int handleCharacter(String sourceCode, int len, int i) {
         int j = i + 1;
-        while (j < len && sourceCode.charAt(j) != '\'')
+        while (j < len ){
+            if(sourceCode.charAt(j)=='\''&&sourceCode.charAt(j-1)!='\\'){
+                break;
+            }
             j++;
+        }
         String letter = sourceCode.substring(i, j + 1);
         String element = sourceCode.substring(i + 1, j);
         // 判断是否合法字符
@@ -231,7 +234,8 @@ public class LexicalAnalyze {
             addToken(Token.TokenType.AND, lineNum, "&&");
             return j;
         } else {
-            errorNode.accessError(new Error(Error.ErrorType.a, lineNum, "&"));
+            addToken(Token.TokenType.AND, lineNum, "&&");
+            errorNode.addError(new Error(Error.ErrorType.a, lineNum));
             return i;
         }
     }
@@ -243,7 +247,8 @@ public class LexicalAnalyze {
             addToken(Token.TokenType.OR, lineNum, "||");
             return j;
         } else {
-            errorNode.accessError(new Error(Error.ErrorType.a, lineNum, "|"));
+            addToken(Token.TokenType.OR, lineNum, "||");
+            errorNode.addError(new Error(Error.ErrorType.a, lineNum));
             return i;
         }
     }
@@ -306,8 +311,9 @@ public class LexicalAnalyze {
     }
 
 
-    public void printTokenList() throws IOException {
-        IO.output(tokens, Settings.lexerFile);
+    public void printTokenList() {
+        IO io = new IO(Settings.lexerFile);
+        io.output(tokens);
     }
 
     private void addToken(Token.TokenType tokenType, int lineNum, String val){
