@@ -50,10 +50,13 @@ public class ParserAnalyze {
         }else{
             if(tokenType==TokenType.SEMICN){ // 缺少;
                 errorHandler.addError(new Error(Error.ErrorType.i,tokens.get(currentIndex-1).getLineNum()));
+                return new Token(TokenType.SEMICN,tokens.get(currentIndex-1).getLineNum(),";");
             } else if (tokenType==TokenType.RPARENT) {
                 errorHandler.addError(new Error(Error.ErrorType.j,tokens.get(currentIndex-1).getLineNum()));
+                return new Token(TokenType.RPARENT,tokens.get(currentIndex-1).getLineNum(),")");
             } else if (tokenType==TokenType.RBRACK) {
                 errorHandler.addError(new Error(Error.ErrorType.k,tokens.get(currentIndex-1).getLineNum()));
+                return new Token(TokenType.RBRACK,tokens.get(currentIndex-1).getLineNum(),"]");
             }
         }
         return null;
@@ -450,10 +453,7 @@ public class ParserAnalyze {
             LVal lVal = null;
             Token assign = null;
             Token token = null; // 读取getint或者getchar
-            if(preMatch(0,TokenType.SEMICN)){ //读取exp以后，如果剩下';',说明为Exp;
-                semiColonToken = match(TokenType.SEMICN);
-                return new Stmt(Stmt.StmtType.EXP,exp,semiColonToken);
-            }else{ // LVal = 语句
+            if(preMatch(0,TokenType.ASSIGN)){ // LVal = 语句
                 backPos(); //回溯
                 lVal = getLVal();
                 assign = match(TokenType.ASSIGN);
@@ -474,6 +474,9 @@ public class ParserAnalyze {
                     semiColonToken = match(TokenType.SEMICN);
                     return new Stmt(Stmt.StmtType.LVALASSIGN,lVal,assign,exp,semiColonToken);
                 }
+            }else{ //读取exp以后，如果剩下';',说明为Exp;
+                semiColonToken = match(TokenType.SEMICN);
+                return new Stmt(Stmt.StmtType.EXP,exp,semiColonToken);
             }
         }
     }
@@ -701,9 +704,9 @@ public class ParserAnalyze {
     }
 
     public void print(){
-//        if(!ErrorHandler.getErrorHandler().getIsError()){
+        if(!ErrorHandler.getErrorHandler().getIsError()){
             resultCompUnit.print();
-//        }
+        }
     }
 
     public CompUnit getResult(){

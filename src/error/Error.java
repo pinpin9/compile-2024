@@ -7,7 +7,16 @@ public class Error implements Comparable<Error>{
     }
 
     public enum ErrorType {
-        a,b,c,d,e,f,g,h,i,j,k,l,m
+        a, //&&或||
+        b,
+        c,
+        d,
+        e,f,g,h,
+        i,//;
+        j,//]
+        k,//)
+        l,
+        m
     }
     private ErrorType errorType;
     private int lineNum;
