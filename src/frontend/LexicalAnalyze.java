@@ -311,7 +311,7 @@ public class LexicalAnalyze {
     }
 
 
-    public void printTokenList() {
+    public void print() {
         IO io = new IO(Settings.lexerFile);
         io.output(tokens);
     }
