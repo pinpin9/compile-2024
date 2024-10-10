@@ -60,7 +60,6 @@ public class ParserAnalyze {
             }
         }
         return null;
-
     }
     private void next(){
         if(currentIndex+1<len){
@@ -556,7 +555,7 @@ public class ParserAnalyze {
             Token ident = match(TokenType.IDENFR);
             Token lParent = match(TokenType.LPARENT);
             FuncRParams funcRParams = null;
-            if(!preMatch(0,TokenType.RPARENT)){
+            if(isExp()){
                 funcRParams = getFuncRParams();
             }
             Token rParent = match(TokenType.RPARENT);
@@ -592,6 +591,14 @@ public class ParserAnalyze {
             expList.add(getExp());
         }
         return new FuncRParams(expList,commas);
+    }
+
+    private boolean isExp() {
+        return  currentToken.getType() == TokenType.IDENFR ||
+                isUnaryOp(currentToken) ||
+                currentToken.getType() == TokenType.LPARENT ||
+                currentToken.getType() == TokenType.INTCON ||
+                currentToken.getType() == TokenType.CHRCON;
     }
 
     // MulExp → UnaryExp | MulExp ('*' | '/' | '%') UnaryExp
