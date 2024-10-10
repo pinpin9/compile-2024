@@ -62,7 +62,7 @@
 
 在LexicalAnalyse.java文件中，有一个analyse函数，对参数源代码逐字符读取，对字符的不同情况进行不同的处理。比如如果碰见$\n$字符，则lineNum行号增加1。
 
-![image-20240919193704428](C:\Users\周琳萍\AppData\Roaming\Typora\typora-user-images\image-20240919193704428.png)
+<img src="https://s2.loli.net/2024/10/10/mxLKeAl5FRZSaMX.png" alt="image-20240919193704428.png" style="zoom: 67%;" />
 
 代码处理逻辑如下
 
@@ -111,7 +111,6 @@
 	}
 }
 ```
-
 
 ```java
 // 标识符或保留字处理
@@ -318,7 +317,7 @@ AddExp → MulExp { ('+' | '−') MulExp }
 
 图示为
 
-<img src="C:\Users\周琳萍\AppData\Roaming\Typora\typora-user-images\image-20241010162950424.png" alt="image-20241010162950424" style="zoom:50%;" />
+<img src="https://s2.loli.net/2024/10/10/gQKoPRs9lFh4DL2.png" alt="image-20241010162950424.png" style="zoom:50%;" />
 
 对于此类的节点，在输出和后续生成中间代码的时候，应该格外注意
 
