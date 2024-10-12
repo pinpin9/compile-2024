@@ -51,4 +51,14 @@ public class ConstInitVal extends Node{
         }
         printType();
     }
+
+    public void traverse() {
+        if(constExp!=null){
+            constExp.traverse();
+        }else if(constExpList!=null){
+            for(ConstExp constExp:constExpList){
+                constExp.traverse();
+            }
+        }
+    }
 }

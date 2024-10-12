@@ -78,7 +78,7 @@ public class LexicalAnalyze {
         }
         return type;
     }
-    private final HashMap<String,Token.TokenType> symbols = new HashMap<String,Token.TokenType>() {
+    private final HashMap<String,Token.TokenType> symbols = new HashMap<String, Token.TokenType>() {
         {
             put("+", Token.TokenType.PLUS);
             put("-", Token.TokenType.MINU);

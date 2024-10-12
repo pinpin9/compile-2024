@@ -1,5 +1,7 @@
 package node;
 
+import error.SemanticError;
+import symbol.Symbol;
 import token.Token;
 
 // UnaryExp → PrimaryExp | Ident '(' [FuncRParams] ')' | UnaryOp UnaryExp
@@ -44,5 +46,36 @@ public class UnaryExp extends Node{
           rParent.print();
         }
         printType();
+    }
+
+    public void traverse() {
+        if(primaryExp!=null){
+            primaryExp.traverse();
+        } else if (unaryExp!=null) {
+            unaryExp.traverse();
+        } else {
+            // 标识符是否存在
+            Symbol symbol = SemanticError.checkSymbol(ident.getValue(), ident.getLineNum());
+            // 函数参数个数是否匹配
+            Boolean isTrueCount = false;
+            if(symbol != null){
+                isTrueCount = SemanticError.checkFuncParamCount(symbol, getParamsCount(), ident.getLineNum());
+            }
+            // 参数类型是否匹配
+            if(funcRParams!=null){
+                // 函数参数类型是否匹配
+                if(isTrueCount){
+                    SemanticError.checkFuncParamsType(symbol);
+                }
+                funcRParams.traverse();
+            }
+        }
+    }
+    public int getParamsCount(){
+        if(funcRParams!=null){
+            return funcRParams.getParamsCount();
+        }else {
+            return 0;
+        }
     }
 }

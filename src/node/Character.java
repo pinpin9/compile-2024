@@ -14,4 +14,8 @@ public class Character extends Node{
         charConst.print();
         printType();
     }
+
+    public void traverse() {
+
+    }
 }

@@ -27,4 +27,14 @@ public class CompUnit extends Node{
         mainFuncDef.print();
         printType();
     }
+
+    public void traverse() {
+        for(Decl declItem:decl){
+            declItem.traverse();
+        }
+        for(FuncDef funcDefItem:funcDef){
+            funcDefItem.traverse();
+        }
+        mainFuncDef.traverse();
+    }
 }

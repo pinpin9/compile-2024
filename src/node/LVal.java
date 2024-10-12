@@ -1,5 +1,6 @@
 package node;
 
+import error.SemanticError;
 import token.Token;
 
 // LVal → Ident ['[' Exp ']']
@@ -26,5 +27,15 @@ public class LVal extends Node{
             rBrack.print();
         }
         printType();
+    }
+
+    public void traverse() {
+        // 检查标识符是否存在
+        SemanticError.checkSymbol(ident.getValue(), ident.getLineNum());
+        // 检查是否为常量
+        SemanticError.checkChangeConst(ident.getValue(), ident.getLineNum());
+        if(exp!=null){
+            exp.traverse();
+        }
     }
 }

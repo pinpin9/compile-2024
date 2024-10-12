@@ -50,4 +50,14 @@ public class InitVal extends Node{
         }
         printType();
     }
+
+    public void traverse() {
+        if(exp!=null){
+            exp.traverse();
+        } else if (expList!=null) {
+            for(Exp exp:expList){
+                exp.traverse();
+            }
+        }
+    }
 }

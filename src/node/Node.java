@@ -1,6 +1,7 @@
 package node;
 
 import frontend.ParserAnalyze;
+import symbol.Symbol;
 import tools.IO;
 
 import java.io.IOException;
@@ -48,10 +49,11 @@ public abstract class Node {
         type = nodeType;
     }
 
+    // 遍历输出语法分析结果
     public abstract void print();
 
+
     public void printType() {
-        System.out.println(type.toString());
         ParserAnalyze.parserOutput.output("<"+type.toString()+">");
     }
 }

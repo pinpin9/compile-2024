@@ -25,4 +25,10 @@ public class RelExp extends Node{
             }
         }
     }
+
+    public void traverse() {
+        for(AddExp addExp:addExps){
+            addExp.traverse();
+        }
+    }
 }

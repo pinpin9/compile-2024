@@ -45,4 +45,12 @@ public class PrimaryExp extends Node{
         }
         printType();
     }
+
+    public void traverse() {
+        if(exp!=null){
+            exp.traverse();
+        } else if (lVal!=null) {
+            lVal.traverse();
+        }
+    }
 }

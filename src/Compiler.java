@@ -26,5 +26,8 @@ public class Compiler {
 
         //============语义分析=============
         SemanticAnalyze.getInstance().analyze(ParserAnalyze.getInstance().getResult());
+        SemanticAnalyze.getInstance().print();
+
+        error();
     }
 }

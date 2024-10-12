@@ -26,4 +26,10 @@ public class MulExp extends Node{
             }
         }
     }
+
+    public void traverse() {
+        for(UnaryExp unaryExp:unaryExps){
+            unaryExp.traverse();
+        }
+    }
 }

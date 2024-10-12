@@ -24,5 +24,11 @@ public class AddExp extends Node{
             }
         }
     }
+
+    public void traverse() {
+        for(int i=0;i<mulExps.size();i++){
+            mulExps.get(i).traverse();
+        }
+    }
 }
 

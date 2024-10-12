@@ -34,4 +34,10 @@ public class ConstDecl extends Node{
         semicolonToken.print();
         printType();
     }
+
+    public void traverse() {
+        for (ConstDef constDef:constDefList){
+            constDef.traverse();
+        }
+    }
 }

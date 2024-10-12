@@ -22,4 +22,9 @@ public class ForStmt extends Node{
         exp.print();
         printType();
     }
+
+    public void traverse() {
+        lVal.traverse();
+        exp.traverse();
+    }
 }

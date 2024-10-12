@@ -14,6 +14,10 @@ public class FuncRParams extends Node{
         this.commas = commas;
     }
 
+    public int getParamsCount(){
+        return expList.size();
+    }
+
     @Override
     public void print() {
         for(int i = 0;i < expList.size();i++){
@@ -23,5 +27,9 @@ public class FuncRParams extends Node{
             }
         }
         printType();
+    }
+
+    public void traverse() {
+
     }
 }

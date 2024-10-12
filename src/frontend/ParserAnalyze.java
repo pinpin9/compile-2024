@@ -156,10 +156,15 @@ public class ParserAnalyze {
         List<ConstDef> constDefList = new ArrayList<>();
         List<Token> commas = new ArrayList<>();
         Token semicolonToken = null;
-        constDefList.add(getConstDef());
+        ConstDef constDef = getConstDef();
+        constDef.setBType(bType);
+        constDefList.add(constDef);
         while(preMatch(0,TokenType.COMMA)){ // { ','
             commas.add(match(TokenType.COMMA));
-            constDefList.add(getConstDef());
+            constDef = getConstDef();
+            // 设置常量的类型
+            constDef.setBType(bType);
+            constDefList.add(constDef);
         }
         semicolonToken = match(TokenType.SEMICN);
         return new ConstDecl(constToken,bType,constDefList,commas,semicolonToken);
@@ -171,10 +176,14 @@ public class ParserAnalyze {
         List<VarDef> varDefList = new ArrayList<>();
         List<Token> commas = new ArrayList<>();
         Token semicolon = null;
-        varDefList.add(getVarDef());
+        VarDef varDef = getVarDef();
+        varDef.setBType(bType);
+        varDefList.add(varDef);
         while(preMatch(0,TokenType.COMMA)){
             commas.add(match(TokenType.COMMA));
-            varDefList.add(getVarDef());
+            varDef = getVarDef();
+            varDef.setBType(bType);
+            varDefList.add(varDef);
         }
         semicolon = match(TokenType.SEMICN);
         return new VarDecl(bType, varDefList, commas, semicolon);

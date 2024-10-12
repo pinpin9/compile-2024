@@ -35,6 +35,4 @@ public class ErrorHandler {
         IO io = new IO(Settings.errorFile);
         io.output(getErrorList());
     }
-
-    // 遍历语法树
 }
