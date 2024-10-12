@@ -1,6 +1,13 @@
 package node;
 
+import error.SemanticError;
+import symbol.Symbol;
+import symbol.Symbol.SymbolType;
+import symbol.SymbolStack;
 import token.Token;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // FuncDef → FuncType Ident '(' [FuncFParams] ')' Block
 public class FuncDef extends Node{
@@ -31,5 +38,47 @@ public class FuncDef extends Node{
         rParent.print();
         block.print();
         printType();
+    }
+
+    // 函数声明，先在当前栈顶符号表中增加函数符号，再新建一个符号表
+    public void traverse() {
+        List<Symbol> funcParams = new ArrayList<>();
+        Symbol symbol = SemanticError.addSymbol(ident.getValue(), getType(), ident.getLineNum() ,this,funcType,funcParams);
+        SemanticError.addTable(this);
+        // 形参的处理
+        if(funcFParams!=null){
+            funcFParams.traverse();
+            funcParams = funcFParams.getParams();
+        }
+        if(symbol!=null){
+            symbol.setFuncParams(funcParams);
+        }
+
+        if(!isVoidFunc()){ // 需要返回值
+            SemanticError.inReturnFunc();
+            SemanticError.checkReturn(block);
+        }
+        block.traverse();
+        SemanticError.leaveReturnFunc();
+        SemanticError.popTable();
+    }
+
+    private SymbolType getType(){
+        switch (funcType.getFuncType().getValue()){
+            case "int" ->{
+                return SymbolType.IntFunc;
+            }
+            case "void" ->{
+                return SymbolType.VoidFunc;
+            }
+            case "char" ->{
+                return SymbolType.CharFunc;
+            }
+        }
+        return null;
+    }
+
+    private boolean isVoidFunc(){
+        return funcType.getFuncType().getValue().equals("void");
     }
 }

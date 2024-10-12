@@ -1,5 +1,7 @@
 package node;
 
+import error.SemanticError;
+import symbol.Symbol;
 import token.Token;
 
 // MainFuncDef → 'int' 'main' '(' ')' Block
@@ -27,5 +29,14 @@ public class MainFuncDef extends Node{
         rParent.print();
         block.print();
         printType();
+    }
+
+    public void traverse() {
+        SemanticError.inReturnFunc();
+        SemanticError.checkReturn(block);
+        SemanticError.addTable(this);
+        block.traverse();
+        SemanticError.popTable();
+        SemanticError.leaveReturnFunc();
     }
 }

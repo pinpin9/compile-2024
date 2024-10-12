@@ -1,5 +1,6 @@
 package node;
 
+import error.SemanticError;
 import token.Token;
 
 import java.util.ArrayList;
@@ -67,6 +68,10 @@ public class Stmt extends Node{
     private Token stringConst = null;
     private List<Token> commas = new ArrayList<>();
     private List<Exp> expList = new ArrayList<>();
+
+    public StmtType getType(){
+        return type;
+    }
 
     public Stmt(StmtType type, LVal lVal, Token assign, Exp exp, Token semicolonToken){
         super(NodeType.Stmt);
@@ -201,7 +206,6 @@ public class Stmt extends Node{
                 }
                 semiColonList.get(1).print();
                 if(forStmt2!=null){
-                    System.out.println(2);
                     forStmt2.print();
                 }
                 rParent.print();
@@ -250,5 +254,71 @@ public class Stmt extends Node{
             }
         }
         printType();
+    }
+
+    public void traverse() {
+        switch (type){
+            case IF -> {
+                cond.traverse();
+                stmt1.traverse();
+                if(stmt2!=null){
+                    stmt2.traverse();
+                }
+            }
+            case EXP -> {
+                if(exp!=null){
+                    exp.traverse();
+                }
+            }
+            case LVALASSIGN -> {
+                // 检查是否为常量
+                lVal.traverse();
+                SemanticError.checkChangeConst(lVal.getIdent().getValue(), lVal.getIdent().getLineNum());
+                exp.traverse();
+            }
+            case Block -> {
+                SemanticError.addTable(this);
+                block.traverse();
+                SemanticError.popTable();
+            }
+            case FOR -> {
+                if(forStmt1!=null){
+                    forStmt1.traverse();
+                }
+                if(cond!=null){
+                    cond.traverse();
+                }
+                if(forStmt2!=null){
+                    forStmt2.traverse();
+                }
+                SemanticError.inLoop();
+                stmt1.traverse();
+                SemanticError.leaveLoop();
+            }
+            case RETURN -> {
+                SemanticError.checkReturn(returnToken.getLineNum());
+                if(exp!=null){
+                    exp.traverse();
+                }
+            }
+            case LVALGETINT,LVALGETCHAR -> {
+                // 检查是否为常量
+                SemanticError.checkChangeConst(lVal.getIdent().getValue(), lVal.getIdent().getLineNum());
+                lVal.traverse();
+            }
+            case PRINTF -> {
+                // 检查printf中格式字符与表达式个数是否匹配
+                SemanticError.checkFormat(stringConst.getValue(),expList.size(),printfToken.getLineNum());
+                for(Exp exp:expList){
+                    exp.traverse();
+                }
+            }
+            case BREAK, CONTINUE -> {
+                SemanticError.checkLoop(breakOrContinue.getLineNum());
+            }
+            default -> {
+
+            }
+        }
     }
 }

@@ -15,4 +15,8 @@ public class Number extends Node{
         intConst.print();
         printType();
     }
+
+    public void traverse() {
+
+    }
 }

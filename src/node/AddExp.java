@@ -1,5 +1,6 @@
 package node;
 
+import symbol.Symbol;
 import token.Token;
 
 import java.util.List;
@@ -23,6 +24,16 @@ public class AddExp extends Node{
                 ops.get(i).print();
             }
         }
+    }
+
+    public void traverse() {
+        for(int i=0;i<mulExps.size();i++){
+            mulExps.get(i).traverse();
+        }
+    }
+
+    public String getVarType(){
+        return mulExps.get(0).getVarType();
     }
 }
 

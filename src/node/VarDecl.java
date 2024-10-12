@@ -31,4 +31,10 @@ public class VarDecl extends Node{
         semicolon.print();
         printType();
     }
+
+    public void traverse() {
+        for(VarDef varDef:varDefList){
+            varDef.traverse();
+        }
+    }
 }

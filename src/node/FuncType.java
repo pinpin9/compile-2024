@@ -9,9 +9,17 @@ public class FuncType extends Node{
         this.funcType = funcType;
     }
 
+    public Token getFuncType() {
+        return funcType;
+    }
+
     @Override
     public void print() {
         funcType.print();
         printType();
+    }
+
+    public void traverse() {
+
     }
 }

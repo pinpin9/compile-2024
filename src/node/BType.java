@@ -10,8 +10,16 @@ public class BType extends Node{
         this.bType = bType;
     }
 
+    public Token getbType() {
+        return bType;
+    }
+
     @Override
     public void print() {
         bType.print();
+    }
+
+    public void traverse() {
+
     }
 }

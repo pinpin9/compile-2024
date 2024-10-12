@@ -11,12 +11,24 @@ public class BlockItem extends Node{
         this.stmt = stmt;
     }
 
+    public Stmt getStmt(){
+        return stmt;
+    }
+
     @Override
     public void print() {
         if(decl!=null){
             decl.print();
         }else{
             stmt.print();
+        }
+    }
+
+    public void traverse() {
+        if(decl!=null){
+            decl.traverse();
+        }else{
+            stmt.traverse();
         }
     }
 }

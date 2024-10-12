@@ -24,4 +24,10 @@ public class LAndExp extends Node{
             }
         }
     }
+
+    public void traverse() {
+        for(EqExp eqExp:eqExps){
+            eqExp.traverse();
+        }
+    }
 }

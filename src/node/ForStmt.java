@@ -1,5 +1,6 @@
 package node;
 
+import error.SemanticError;
 import token.Token;
 
 // ForStmt → LVal '=' Exp
@@ -21,5 +22,11 @@ public class ForStmt extends Node{
         assign.print();
         exp.print();
         printType();
+    }
+
+    public void traverse() {
+        lVal.traverse();
+        SemanticError.checkChangeConst(lVal.getIdent().getValue(), lVal.getIdent().getLineNum());
+        exp.traverse();
     }
 }

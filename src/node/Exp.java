@@ -14,4 +14,12 @@ public class Exp extends Node{
         addExp.print();
         printType();
     }
+
+    public void traverse() {
+        addExp.traverse();
+    }
+
+    public String getVarType(){
+        return addExp.getVarType();
+    }
 }

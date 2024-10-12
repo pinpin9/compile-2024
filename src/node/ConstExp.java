@@ -13,4 +13,8 @@ public class ConstExp extends Node{
         addExp.print();
         printType();
     }
+
+    public void traverse() {
+        addExp.traverse();
+    }
 }

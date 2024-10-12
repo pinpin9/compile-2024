@@ -1,5 +1,6 @@
 package node;
 
+import error.SemanticError;
 import token.Token;
 
 import java.util.List;
@@ -10,6 +11,12 @@ public class Block extends Node{
     private List<BlockItem> blockItemList;
     private Token rBrace;
 
+    public List<BlockItem> getBlockItemList() {
+        return blockItemList;
+    }
+    public Token getrBrace(){
+        return rBrace;
+    }
     public Block(Token lBrace,List<BlockItem> blockItemList,Token rBrace){
         super(NodeType.Block);
         this.lBrace = lBrace;
@@ -25,5 +32,12 @@ public class Block extends Node{
         }
         rBrace.print();
         printType();
+    }
+
+
+    public void traverse() {
+        for(BlockItem blockItem : blockItemList){
+            blockItem.traverse();
+        }
     }
 }

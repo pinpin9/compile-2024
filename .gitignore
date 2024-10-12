@@ -27,3 +27,5 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+# 排除测试文件
+*.txt

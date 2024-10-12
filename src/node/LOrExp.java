@@ -26,4 +26,10 @@ public class LOrExp extends Node{
             }
         }
     }
+
+    public void traverse() {
+        for(LAndExp lAndExp:lAndExps){
+            lAndExp.traverse();
+        }
+    }
 }

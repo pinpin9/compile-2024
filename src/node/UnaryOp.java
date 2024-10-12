@@ -14,4 +14,8 @@ public class UnaryOp extends Node{
         token.print();
         printType();
     }
+
+    public void traverse() {
+
+    }
 }

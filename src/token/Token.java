@@ -40,7 +40,6 @@ public class Token {
     }
 
     public void print(){
-        System.out.println(toString());
         ParserAnalyze.parserOutput.output(toString());
     }
 }

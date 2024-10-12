@@ -14,4 +14,8 @@ public class Cond extends Node{
         lOrExp.print();
         printType();
     }
+
+    public void traverse() {
+        lOrExp.traverse();
+    }
 }

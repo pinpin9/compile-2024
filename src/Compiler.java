@@ -1,17 +1,16 @@
 import java.io.IOException;
-import java.util.Collections;
 
 import frontend.LexicalAnalyze;
 import frontend.ParserAnalyze;
 import error.ErrorHandler;
+import frontend.SemanticAnalyze;
 import tools.IO;
 
 public class Compiler {
 
     public static void error() throws IOException {
-        Collections.sort(ErrorHandler.getErrorHandler().getErrorList());
         if (ErrorHandler.getErrorHandler().getIsError()){
-            ErrorHandler.getErrorHandler().printErrorList();
+            ErrorHandler.getErrorHandler().print();
         }
     }
     public static void main(String[] args) throws IOException {
@@ -24,6 +23,11 @@ public class Compiler {
         //============语法分析=============
         ParserAnalyze.getInstance().analyze(LexicalAnalyze.getInstance().getTokens());
         ParserAnalyze.getInstance().print();
+
+        //============语义分析=============
+        SemanticAnalyze.getInstance().analyze(ParserAnalyze.getInstance().getResult());
+        SemanticAnalyze.getInstance().print();
+
         error();
     }
 }

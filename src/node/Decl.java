@@ -21,4 +21,12 @@ public class Decl extends Node{
             varDecl.print();
         }
     }
+
+    public void traverse() {
+        if(constDecl!=null){
+            constDecl.traverse();
+        }else{
+            varDecl.traverse();
+        }
+    }
 }
