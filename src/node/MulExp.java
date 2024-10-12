@@ -1,5 +1,6 @@
 package node;
 
+import symbol.Symbol;
 import token.Token;
 
 import java.util.ArrayList;
@@ -31,5 +32,9 @@ public class MulExp extends Node{
         for(UnaryExp unaryExp:unaryExps){
             unaryExp.traverse();
         }
+    }
+
+    public String getVarType() {
+        return unaryExps.get(0).getVarType();
     }
 }

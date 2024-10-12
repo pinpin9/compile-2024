@@ -18,4 +18,8 @@ public class Exp extends Node{
     public void traverse() {
         addExp.traverse();
     }
+
+    public String getVarType(){
+        return addExp.getVarType();
+    }
 }

@@ -18,6 +18,9 @@ public class FuncRParams extends Node{
         return expList.size();
     }
 
+    public List<Exp> getExpList(){
+        return expList;
+    }
     @Override
     public void print() {
         for(int i = 0;i < expList.size();i++){
@@ -30,6 +33,8 @@ public class FuncRParams extends Node{
     }
 
     public void traverse() {
-
+        for(Exp exp:expList){
+            exp.traverse();
+        }
     }
 }

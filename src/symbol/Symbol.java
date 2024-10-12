@@ -42,6 +42,12 @@ public class Symbol {
         this.node = node;
     }
 
+    public int getDim(){
+        if(type.toString().contains("Array")){
+            return 1;
+        }
+        return 0;
+    }
     public void setFuncParams(List<Symbol> funcParams) {
         this.funcParams = funcParams;
     }

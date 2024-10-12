@@ -180,7 +180,7 @@ public class LexicalAnalyze {
     private int handleCharacter(String sourceCode, int len, int i) {
         int j = i + 1;
         while (j < len ){
-            if(sourceCode.charAt(j)=='\''&&sourceCode.charAt(j-1)!='\\'){
+            if((sourceCode.charAt(j)=='\''&&sourceCode.charAt(j-1)!='\\')||(j-i>2)){
                 break;
             }
             j++;

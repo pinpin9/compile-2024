@@ -65,7 +65,7 @@ public class UnaryExp extends Node{
             if(funcRParams!=null){
                 // 函数参数类型是否匹配
                 if(isTrueCount){
-                    SemanticError.checkFuncParamsType(symbol);
+                    SemanticError.checkFuncParamsType(symbol,funcRParams.getExpList(), ident.getLineNum());
                 }
                 funcRParams.traverse();
             }
@@ -76,6 +76,27 @@ public class UnaryExp extends Node{
             return funcRParams.getParamsCount();
         }else {
             return 0;
+        }
+    }
+
+    public String getVarType(){
+        if(primaryExp!=null){
+            return primaryExp.getVarType();
+        } else if (unaryOp!=null) {
+            return unaryExp.getVarType();
+        } else {
+            // 此处先不检查参数的问题，仅根据函数的返回类型进行判断
+            Symbol symbol = SemanticError.stack.getSymbol(ident.getValue());
+            // 函数不存在不报错 在后续检测时再报错
+            if(symbol==null){
+                return null;
+            }
+            if(symbol.getType()== Symbol.SymbolType.CharFunc){
+                return "Char";
+            } else if (symbol.getType()== Symbol.SymbolType.IntFunc) {
+                return "Int";
+            }
+            return null;
         }
     }
 }

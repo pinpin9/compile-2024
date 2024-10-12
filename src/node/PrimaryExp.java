@@ -53,4 +53,16 @@ public class PrimaryExp extends Node{
             lVal.traverse();
         }
     }
+
+    public String getVarType() {
+        if(exp!=null){
+            return exp.getVarType();
+        } else if (lVal!=null) {
+            return lVal.getVarType();
+        } else if (character!=null) {
+            return "Char";
+        } else {
+            return "Int";
+        }
+    }
 }

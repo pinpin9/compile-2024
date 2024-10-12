@@ -66,17 +66,36 @@ public class SemanticError {
     }
 
     // 检查函数参数的类型是否相同，e错误
-    public static void checkFuncParamsType(String name){
-
+    public static void checkFuncParamsType(Symbol symbol, List<Exp> expList,int lineNum){
+        // 函数形参列表
+        List<Symbol> funcFParams = symbol.getFuncParams();
+        /* 判断每个exp的类型和函数形参是否相同
+        * 错误类型
+        * 传递数组给变量
+        * 传递变量给数组
+        * 传递char型数组给int型数组
+        * 传递int型数组给char型数组
+        * */
+        for(int i=0;i<funcFParams.size();i++){
+            String expType=expList.get(i).getVarType();
+            String paramType = funcFParams.get(i).getType().toString();
+            if((expType.contains("Array")&&!paramType.contains("Array")) || (!expType.contains("Array")&&paramType.contains("Array")) ){
+                errorHandler.addError(new Error(Error.ErrorType.e,lineNum));
+            } else if ((expType.equals("CharArray")&&paramType.equals("IntArray"))|| (paramType.equals("CharArray")&&expType.equals("IntArray"))) {
+                errorHandler.addError(new Error(Error.ErrorType.e,lineNum));
+            }
+        }
     }
 
 
     // 检查是否改变常量
     public static void checkChangeConst(String name,int lineNum){
         Symbol symbol = stack.getSymbol(name);
-        String type = symbol.getType().toString();
-        if(type.contains("Const")){
-            errorHandler.addError(new Error(Error.ErrorType.h, lineNum));
+        if(symbol!=null){
+            String type = symbol.getType().toString();
+            if(type.contains("Const")){
+                errorHandler.addError(new Error(Error.ErrorType.h, lineNum));
+            }
         }
     }
 
@@ -99,7 +118,7 @@ public class SemanticError {
     // 需要返回值的函数缺少return语句
     public static void checkReturn(Block block){
         List<BlockItem> blockItemList = block.getBlockItemList();
-        if(blockItemList!=null){
+        if(blockItemList!=null&&blockItemList.size()>0){
             BlockItem blockItem = blockItemList.get(blockItemList.size()-1);
             Stmt stmt = blockItem.getStmt();
             if(stmt!=null&&stmt.getType()== Stmt.StmtType.RETURN){
@@ -131,5 +150,9 @@ public class SemanticError {
         if(formatCount!=count){
             errorHandler.addError(new Error(Error.ErrorType.l,lineNum));
         }
+    }
+
+    public static Symbol getSymbol(String name){
+        return stack.getSymbol(name);
     }
 }

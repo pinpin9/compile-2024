@@ -271,7 +271,9 @@ public class Stmt extends Node{
                 }
             }
             case LVALASSIGN -> {
+                // 检查是否为常量
                 lVal.traverse();
+                SemanticError.checkChangeConst(lVal.getIdent().getValue(), lVal.getIdent().getLineNum());
                 exp.traverse();
             }
             case Block -> {
@@ -300,6 +302,8 @@ public class Stmt extends Node{
                 }
             }
             case LVALGETINT,LVALGETCHAR -> {
+                // 检查是否为常量
+                SemanticError.checkChangeConst(lVal.getIdent().getValue(), lVal.getIdent().getLineNum());
                 lVal.traverse();
             }
             case PRINTF -> {

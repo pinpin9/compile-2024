@@ -1,6 +1,7 @@
 package node;
 
 import error.SemanticError;
+import symbol.Symbol;
 import token.Token;
 
 // LVal → Ident ['[' Exp ']']
@@ -10,6 +11,9 @@ public class LVal extends Node{
     private Exp exp;
     private Token rBrack;
 
+    public Token getIdent(){
+        return ident;
+    }
     public LVal(Token ident, Token lBrack, Exp exp, Token rBrack){
         super(NodeType.LVal);
         this.ident = ident;
@@ -32,10 +36,20 @@ public class LVal extends Node{
     public void traverse() {
         // 检查标识符是否存在
         SemanticError.checkSymbol(ident.getValue(), ident.getLineNum());
-        // 检查是否为常量
-        SemanticError.checkChangeConst(ident.getValue(), ident.getLineNum());
         if(exp!=null){
             exp.traverse();
         }
+    }
+
+    public String getVarType() {
+        Symbol symbol = SemanticError.getSymbol(ident.getValue());
+        String type = symbol.getType().toString();
+        if(type.contains("Const")){
+            type = type.substring(5);
+        }
+        if(exp!=null&&type.contains("Array")){
+            type = type.replace("Array","");
+        }
+        return type;
     }
 }

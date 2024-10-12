@@ -131,7 +131,7 @@ public class ParserAnalyze {
         Token ident = match(TokenType.IDENFR);
         Token lParent = match(TokenType.LPARENT);
         FuncFParams funcFParams = null;
-        if(!preMatch(0,TokenType.RPARENT)){
+        if(preMatch(0,TokenType.INTTK)||preMatch(0,TokenType.CHARTK)){
             funcFParams = getFuncFParams();
         }
         Token rParent = match(TokenType.RPARENT);
@@ -410,7 +410,7 @@ public class ParserAnalyze {
                 cond = getCond();
             }
             semicolonList.add(match(TokenType.SEMICN));
-            if(!preMatch(0,TokenType.RPARENT)){
+            if(preMatch(0,TokenType.IDENFR)){
                 forStmt2 = getForStmt();
             }
             rParent = match(TokenType.RPARENT);
@@ -428,7 +428,7 @@ public class ParserAnalyze {
             }
         } else if (preMatch(0,TokenType.RETURNTK)) { // return
             Token returnToken = match(TokenType.RETURNTK);
-            if(!preMatch(0,TokenType.SEMICN)){
+            if(isExp()){
                 exp = getExp();
             }
             semiColonToken = match((TokenType.SEMICN));
@@ -560,7 +560,7 @@ public class ParserAnalyze {
             UnaryOp unaryOp = getUnaryOp();
             UnaryExp unaryExp = getUnaryExp();
             return new UnaryExp(unaryOp,unaryExp);
-        } else if (preMatch(1,TokenType.LPARENT)) {
+        } else if (preMatch(0,TokenType.IDENFR) && preMatch(1,TokenType.LPARENT)) {
             Token ident = match(TokenType.IDENFR);
             Token lParent = match(TokenType.LPARENT);
             FuncRParams funcRParams = null;
@@ -720,9 +720,9 @@ public class ParserAnalyze {
     }
 
     public void print(){
-        if(!ErrorHandler.getErrorHandler().getIsError()){
+//        if(!ErrorHandler.getErrorHandler().getIsError()){
             resultCompUnit.print();
-        }
+//        }
     }
 
     public CompUnit getResult(){

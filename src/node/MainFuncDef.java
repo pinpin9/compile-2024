@@ -33,6 +33,7 @@ public class MainFuncDef extends Node{
 
     public void traverse() {
         SemanticError.inReturnFunc();
+        SemanticError.checkReturn(block);
         SemanticError.addTable(this);
         block.traverse();
         SemanticError.popTable();

@@ -50,7 +50,9 @@ public class FuncDef extends Node{
             funcFParams.traverse();
             funcParams = funcFParams.getParams();
         }
-        symbol.setFuncParams(funcParams);
+        if(symbol!=null){
+            symbol.setFuncParams(funcParams);
+        }
 
         if(!isVoidFunc()){ // 需要返回值
             SemanticError.inReturnFunc();
