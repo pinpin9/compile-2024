@@ -7,10 +7,6 @@ import error.ErrorHandler;
 import tools.IO;
 
 public class Compiler {
-
-    public static void lexer() throws IOException {
-        LexicalAnalyze.getInstance().printTokenList();
-    }
     public static void error() throws IOException {
         Collections.sort(ErrorHandler.getErrorHandler().getErrorList());
         if (ErrorHandler.getErrorHandler().getIsError()){
@@ -22,8 +18,7 @@ public class Compiler {
         String input = IO.getInput();
         // 词法分析
         LexicalAnalyze.getInstance().analyze(input);
-        // 词法分析输出
-        lexer();
+        LexicalAnalyze.getInstance().print();
 
         // 语法分析
         ParserAnalyze.getInstance().analyze(LexicalAnalyze.getInstance().getTokens());
