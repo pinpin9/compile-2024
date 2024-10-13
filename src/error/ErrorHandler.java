@@ -28,7 +28,9 @@ public class ErrorHandler {
         return errorList;
     }
     public void addError(Error e){
-        errorList.add(e);
+        if (!errorList.contains(e)) {
+            errorList.add(e);
+        }
         isError=true;
     }
     public void print() throws IOException {

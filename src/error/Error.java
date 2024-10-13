@@ -32,4 +32,9 @@ public class Error implements Comparable<Error>{
     public String toString(){
         return lineNum + " " + errorType;
     }
+    @Override
+    public boolean equals(Object o){
+        Error error = (Error) o;
+        return this.lineNum==error.lineNum&&this.errorType==error.errorType;
+    }
 }
