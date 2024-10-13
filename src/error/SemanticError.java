@@ -47,6 +47,10 @@ public class SemanticError {
         stack.pop();
     }
 
+    public static Symbol getSymbol(String name){
+        return stack.getSymbol(name);
+    }
+
     /*=======查找符号是否在符号栈中=======*/
     public static Symbol checkSymbol(String name, int lineNum){
         if(!stack.isInStack(name)){
@@ -140,6 +144,8 @@ public class SemanticError {
             errorHandler.addError(new Error(Error.ErrorType.m,lineNum));
         }
     }
+
+    // 检查printf语句格式字符和变量数目是否相同
     public static void checkFormat(String string, int count,int lineNum){
         int formatCount = 0;
         for(int i=0,j=1;j<string.length();i++,j++){
@@ -152,7 +158,4 @@ public class SemanticError {
         }
     }
 
-    public static Symbol getSymbol(String name){
-        return stack.getSymbol(name);
-    }
 }
