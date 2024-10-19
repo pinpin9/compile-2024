@@ -296,8 +296,8 @@ public class Stmt extends Node{
                 SemanticError.leaveLoop();
             }
             case RETURN -> {
-                SemanticError.checkReturn(returnToken.getLineNum());
                 if(exp!=null){
+                    SemanticError.checkReturn(returnToken.getLineNum());
                     exp.traverse();
                 }
             }

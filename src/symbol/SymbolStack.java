@@ -70,7 +70,8 @@ public class SymbolStack {
     }
     // 返回第一个匹配的符号
     public Symbol getSymbol(String name, SymbolType type){
-        for(SymbolTable item:stack){
+        for(int i = stack.size()-1;i>=0;i--){
+            SymbolTable item = stack.get(i);
             if(item.containSymbol(name,type)){
                 return item.getSymbol(name,type);
             }
@@ -80,7 +81,9 @@ public class SymbolStack {
 
     // 返回第一个匹配的符号
     public Symbol getSymbol(String name){
-        for(SymbolTable item:stack){
+
+        for(int i = stack.size()-1;i>=0;i--){
+            SymbolTable item = stack.get(i);
             if(item.containSymbol(name)){
                 return item.getSymbol(name);
             }

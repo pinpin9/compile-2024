@@ -199,8 +199,15 @@ public class LexicalAnalyze {
     // 字符串处理
     private int handleString(String sourceCode, int len, int i) {
         int j = i + 1;
-        while (j < len && sourceCode.charAt(j) != '\"')
+        while (j < len ){
+            if(sourceCode.charAt(j)=='\\'){
+                j++;
+            } else if (sourceCode.charAt(j)=='\"') {
+                break;
+            }
             j++;
+        }
+
         String str = sourceCode.substring(i, j + 1);
         addToken(Token.TokenType.STRCON, lineNum, str);
         return j;
