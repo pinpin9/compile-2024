@@ -19,6 +19,11 @@ public class BType extends Node{
         bType.print();
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
 
     }

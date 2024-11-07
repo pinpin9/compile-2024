@@ -24,6 +24,11 @@ public class ForStmt extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
         lVal.traverse();
         SemanticError.checkChangeConst(lVal.getIdent().getValue(), lVal.getIdent().getLineNum());

@@ -46,6 +46,19 @@ public class PrimaryExp extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+        if(exp!=null){
+            exp.buildIr();
+        } else if (lVal!=null) {
+            lVal.buildIr();
+        } else if (number!=null){
+            number.buildIr();
+        } else {
+            character.buildIr();
+        }
+    }
+
     public void traverse() {
         if(exp!=null){
             exp.traverse();

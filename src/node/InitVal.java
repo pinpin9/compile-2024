@@ -1,5 +1,6 @@
 package node;
 
+import ir.types.constants.ConstInt;
 import token.Token;
 
 import java.util.ArrayList;
@@ -49,6 +50,35 @@ public class InitVal extends Node{
             rBrace.print();
         }
         printType();
+    }
+
+    @Override
+    public void buildIr() {
+        if(exp != null){
+            exp.buildIr();
+        } else if (stringConst!=null) {
+            if(valueUpList!=null){
+                valueUpList.clear();
+            }
+            String string = stringConst.getValue();
+            // 去掉开头结尾的"
+            string = string.substring(1,string.length()-1);
+            for(int i = 0; i< string.length();i++){
+                char ch = string.charAt(i);
+                valueUpList.add(new ConstInt(ch));
+            }
+        } else {
+            for(Exp exp: expList){
+                if(stack.isGlobal()){
+                    needCalExp = true;
+                    exp.buildIr();
+                    needCalExp = false;
+                    valueUpList.add(valueUp);
+                }
+
+            }
+
+        }
     }
 
     public void traverse() {

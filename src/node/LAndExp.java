@@ -25,6 +25,11 @@ public class LAndExp extends Node{
         }
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
         for(EqExp eqExp:eqExps){
             eqExp.traverse();

@@ -15,6 +15,11 @@ public class Exp extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+        addExp.buildIr();
+    }
+
     public void traverse() {
         addExp.traverse();
     }

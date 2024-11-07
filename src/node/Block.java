@@ -34,6 +34,13 @@ public class Block extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+        for(BlockItem blockItem : blockItemList){
+            blockItem.buildIr();
+        }
+    }
+
 
     public void traverse() {
         for(BlockItem blockItem : blockItemList){

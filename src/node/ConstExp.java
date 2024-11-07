@@ -14,6 +14,13 @@ public class ConstExp extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+        needCalExp = true;
+        addExp.buildIr();
+        needCalExp = false;
+    }
+
     public void traverse() {
         addExp.traverse();
     }

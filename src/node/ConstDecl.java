@@ -35,6 +35,14 @@ public class ConstDecl extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+        for(ConstDef constDef:constDefList){
+            constDef.setBType(bType);
+            constDef.buildIr();
+        }
+    }
+
     public void traverse() {
         for (ConstDef constDef:constDefList){
             constDef.traverse();

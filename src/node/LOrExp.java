@@ -27,6 +27,11 @@ public class LOrExp extends Node{
         }
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
         for(LAndExp lAndExp:lAndExps){
             lAndExp.traverse();

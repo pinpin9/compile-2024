@@ -4,15 +4,11 @@ import frontend.LexicalAnalyze;
 import frontend.ParserAnalyze;
 import error.ErrorHandler;
 import frontend.SemanticAnalyze;
+import ir.IrBuilder;
 import tools.IO;
 
 public class Compiler {
 
-    public static void error() throws IOException {
-        if (ErrorHandler.getErrorHandler().getIsError()){
-            ErrorHandler.getErrorHandler().print();
-        }
-    }
     public static void main(String[] args) throws IOException {
         // 读输入
         String input = IO.getInput();
@@ -28,6 +24,14 @@ public class Compiler {
         SemanticAnalyze.getInstance().analyze(ParserAnalyze.getInstance().getResult());
         SemanticAnalyze.getInstance().print();
 
-        error();
+        //============错误输出=============
+        if (ErrorHandler.getErrorHandler().getIsError()){
+            ErrorHandler.getErrorHandler().print();
+            return;
+        }
+
+        //============中间代码=============
+        IrBuilder.getInstance().buildIr(ParserAnalyze.getInstance().getResult());
+        IrBuilder.getInstance().print();
     }
 }

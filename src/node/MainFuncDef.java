@@ -1,8 +1,16 @@
 package node;
 
 import error.SemanticError;
+import ir.BasicBlock;
+import ir.Function;
+import ir.IrSymbolTable;
+import ir.types.IntType;
+import ir.types.ValueType;
+import ir.types.VoidType;
 import symbol.Symbol;
 import token.Token;
+
+import java.util.ArrayList;
 
 // MainFuncDef → 'int' 'main' '(' ')' Block
 public class MainFuncDef extends Node{
@@ -29,6 +37,21 @@ public class MainFuncDef extends Node{
         rParent.print();
         block.print();
         printType();
+    }
+
+    @Override
+    public void buildIr() {
+        Function mainFunc = builder.buildFunction(false, "main", new IntType(32), new ArrayList<>());
+        curFunc = mainFunc;
+        // 新建一个符号表入栈
+        stack.push(new IrSymbolTable());
+        // 构建基本块
+        BasicBlock basicBlock = builder.buildBasicBlock(curFunc);
+        curBlock = basicBlock;
+        block.buildIr();
+
+        // 当前block构建完成
+        stack.pop();
     }
 
     public void traverse() {

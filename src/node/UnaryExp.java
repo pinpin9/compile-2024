@@ -1,6 +1,11 @@
 package node;
 
 import error.SemanticError;
+import ir.Value;
+import ir.instructions.binary.Sub;
+import ir.types.constants.ConstChar;
+import ir.types.constants.ConstInt;
+import ir.types.constants.Constant;
 import symbol.Symbol;
 import token.Token;
 
@@ -46,6 +51,63 @@ public class UnaryExp extends Node{
           rParent.print();
         }
         printType();
+    }
+
+    @Override
+    public void buildIr() {
+        if(needCalExp){ // 计算初值
+            if(primaryExp != null){
+                primaryExp.buildIr();
+            } else if (unaryExp != null) {
+                unaryExp.buildIr();
+                Value value = valueUp;
+                if(unaryOp.getOp().getType()== Token.TokenType.MINU){
+                    valueUp = getSubConstant(value);
+                } else if (unaryOp.getOp().getType() == Token.TokenType.NOT) {
+                    int num = 0;
+                    if(value instanceof ConstInt){
+                        num = ((ConstInt)value).getValue();
+                    } else if (value instanceof ConstChar) {
+                        num = ((ConstChar)value).getValue();
+                    }
+                    if(num == 0){
+                        num = 1;
+                    }else {
+                        num = 0;
+                    }
+                    valueUp = new ConstInt(num);
+                }
+            } else {
+
+            }
+        }else{ // 不一定能计算出初值
+            if(primaryExp != null){
+                primaryExp.buildIr();
+            } else if (unaryExp!=null) {
+                unaryExp.buildIr();
+                Value value = valueUp;
+                // '-' | '!' UnaryExp
+                if(unaryOp.getOp().getType() == Token.TokenType.MINU){ // -
+                    if(value instanceof Constant){
+                        valueUp = getSubConstant(value);
+                    } else {
+                        Sub sub = builder.buildSub(curBlock, new ConstInt(0), valueUp);
+                        valueUp = sub;
+                    }
+                } else { // !
+
+                }
+            }
+        }
+    }
+
+    private Constant getSubConstant(Value value){
+        if(value instanceof ConstInt){
+            return new ConstInt(-((ConstInt)value).getValue());
+        } else if (value instanceof ConstChar) {
+            return new ConstInt(-((ConstChar)value).getValue());
+        }
+        return null;
     }
 
     public void traverse() {

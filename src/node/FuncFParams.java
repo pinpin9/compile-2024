@@ -1,5 +1,8 @@
 package node;
 
+import ir.Value;
+import ir.instructions.memory.Alloca;
+import ir.instructions.memory.Store;
 import symbol.Symbol;
 import token.Token;
 
@@ -29,6 +32,17 @@ public class FuncFParams extends Node{
             }
         }
         printType();
+    }
+
+    public List<FuncFParam> getFuncFParams(){
+        return funcFParams;
+    }
+    @Override
+    public void buildIr() {
+        for(FuncFParam funcFParam:funcFParams){
+            funcFParam.buildIr();
+            sysArgs.add(argType);
+        }
     }
 
     public void traverse() {

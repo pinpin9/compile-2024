@@ -15,6 +15,14 @@ public class UnaryOp extends Node{
         printType();
     }
 
+    public Token getOp(){
+        return token;
+    }
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
 
     }

@@ -15,6 +15,11 @@ public class Cond extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
         lOrExp.traverse();
     }

@@ -32,6 +32,14 @@ public class VarDecl extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+        for(VarDef varDef : varDefList){
+            varDef.setBType(bType);
+            varDef.buildIr();
+        }
+    }
+
     public void traverse() {
         for(VarDef varDef:varDefList){
             varDef.traverse();

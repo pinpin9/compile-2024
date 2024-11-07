@@ -26,6 +26,11 @@ public class RelExp extends Node{
         }
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
         for(AddExp addExp:addExps){
             addExp.traverse();

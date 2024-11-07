@@ -1,6 +1,9 @@
 package node;
 
 import error.SemanticError;
+import ir.Function;
+import ir.Value;
+import ir.instructions.Call;
 import token.Token;
 
 import java.util.ArrayList;
@@ -254,6 +257,34 @@ public class Stmt extends Node{
             }
         }
         printType();
+    }
+
+    @Override
+    public void buildIr() {
+        switch (type){
+            case RETURN -> { // return [exp];
+                if(exp == null){ // 无返回值
+                    builder.buildRet(curBlock);
+                }else{ // 有返回值
+                    // 需要计算出返回值
+                    needCalExp = true;
+                    exp.buildIr();
+                    needCalExp = false;
+                    builder.buildRet(curBlock, valueUp);
+                }
+            }
+            case LVALGETINT -> buildLValGetint();
+        }
+    }
+
+    // lval = exp;
+    private void buildLValGetint() {
+        lValAtLeft = true;
+        lVal.buildIr();
+        lValAtLeft = false;
+        Value lValue = valueUp;
+        Call call = builder.buildCall(curBlock, Function.getint, new ArrayList<>());
+        builder.buildStore(curBlock, call, lValue);
     }
 
     public void traverse() {

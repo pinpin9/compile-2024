@@ -32,6 +32,11 @@ public class FuncRParams extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
         for(Exp exp:expList){
             exp.traverse();

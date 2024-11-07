@@ -97,7 +97,6 @@ public class SemanticError {
         Symbol symbol = stack.getSymbol(name);
         if(symbol!=null){
             String type = symbol.getType().toString();
-            System.out.println(type);
             if(type.contains("Const")){
                 errorHandler.addError(new Error(Error.ErrorType.h, lineNum));
             }

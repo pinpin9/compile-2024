@@ -1,5 +1,6 @@
 package node;
 
+import ir.types.constants.ConstInt;
 import token.Token;
 
 // Number → IntConst
@@ -14,6 +15,11 @@ public class Number extends Node{
     public void print() {
         intConst.print();
         printType();
+    }
+
+    @Override
+    public void buildIr() {
+        valueUp = new ConstInt(Integer.parseInt(intConst.getValue()));
     }
 
     public void traverse() {

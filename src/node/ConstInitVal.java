@@ -1,5 +1,7 @@
 package node;
 
+import ir.types.constants.ConstChar;
+import ir.types.constants.ConstInt;
 import token.Token;
 
 import java.util.ArrayList;
@@ -50,6 +52,32 @@ public class ConstInitVal extends Node{
             rBrace.print();
         }
         printType();
+    }
+
+    @Override
+    public void buildIr() {
+        if(constExp!=null){
+            constExp.buildIr();
+        } else if (stringConst!=null) { // 数组
+            if(valueUpList!=null){
+                valueUpList.clear();
+            }
+            String string = stringConst.getValue();
+            // 去掉开头结尾的"
+            string = string.substring(1,string.length()-1);
+            for(int i = 0; i< string.length();i++){
+                char ch = string.charAt(i);
+                valueUpList.add(new ConstInt(ch));
+            }
+        } else {
+            if(valueUpList!=null){
+                valueUpList.clear();
+            }
+            for(int i = 0; i < constExpList.size(); i++){
+                constExpList.get(i).buildIr();
+                valueUpList.add(valueUp);
+            }
+        }
     }
 
     public void traverse() {

@@ -19,6 +19,11 @@ public class FuncType extends Node{
         printType();
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
 
     }

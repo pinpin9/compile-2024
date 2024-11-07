@@ -27,6 +27,11 @@ public class EqExp extends Node{
         }
     }
 
+    @Override
+    public void buildIr() {
+
+    }
+
     public void traverse() {
         for(RelExp relExp:relExps){
             relExp.traverse();

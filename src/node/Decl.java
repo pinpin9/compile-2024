@@ -22,6 +22,15 @@ public class Decl extends Node{
         }
     }
 
+    @Override
+    public void buildIr() {
+        if(constDecl != null){
+            constDecl.buildIr();
+        }else {
+            varDecl.buildIr();
+        }
+    }
+
     public void traverse() {
         if(constDecl!=null){
             constDecl.traverse();

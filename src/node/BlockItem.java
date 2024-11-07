@@ -24,6 +24,15 @@ public class BlockItem extends Node{
         }
     }
 
+    @Override
+    public void buildIr() {
+        if(decl != null){
+            decl.buildIr();
+        }else {
+            stmt.buildIr();
+        }
+    }
+
     public void traverse() {
         if(decl!=null){
             decl.traverse();
