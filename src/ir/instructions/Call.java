@@ -5,6 +5,7 @@ import ir.Function;
 import ir.Value;
 
 import java.util.ArrayList;
+import java.util.List;
 
 // <result> = call [ret attrs] <ty> <name>(<...args>)
 public class Call extends Instruction{
@@ -15,8 +16,8 @@ public class Call extends Instruction{
      * @param function
      * @param args
      */
-    public Call(String name, BasicBlock basicBlock, Function function, ArrayList<Value> args){
-        super(function.getRetType(), "%v" + name, basicBlock, new ArrayList<Value>(){{
+    public Call(String name, BasicBlock basicBlock, Function function, List<Value> args){
+        super(function.getRetType(), name, basicBlock, new ArrayList<Value>(){{
             add(function);
             addAll(args);
         }});

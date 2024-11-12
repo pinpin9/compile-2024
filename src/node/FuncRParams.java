@@ -34,7 +34,10 @@ public class FuncRParams extends Node{
 
     @Override
     public void buildIr() {
-
+        for(Exp exp:expList){
+            exp.buildIr();
+            funcParams.add(valueUp);
+        }
     }
 
     public void traverse() {

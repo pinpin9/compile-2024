@@ -1,8 +1,13 @@
 package node;
 
 import error.SemanticError;
+import ir.Function;
 import ir.Value;
+import ir.instructions.Call;
+import ir.instructions.binary.Icmp;
 import ir.instructions.binary.Sub;
+import ir.types.CharType;
+import ir.types.IntType;
 import ir.types.constants.ConstChar;
 import ir.types.constants.ConstInt;
 import ir.types.constants.Constant;
@@ -56,9 +61,7 @@ public class UnaryExp extends Node{
     @Override
     public void buildIr() {
         if(needCalExp){ // 计算初值
-            if(primaryExp != null){
-                primaryExp.buildIr();
-            } else if (unaryExp != null) {
+             if (unaryExp != null) {
                 unaryExp.buildIr();
                 Value value = valueUp;
                 if(unaryOp.getOp().getType()== Token.TokenType.MINU){
@@ -70,20 +73,14 @@ public class UnaryExp extends Node{
                     } else if (value instanceof ConstChar) {
                         num = ((ConstChar)value).getValue();
                     }
-                    if(num == 0){
-                        num = 1;
-                    }else {
-                        num = 0;
-                    }
+                    num = num==0 ? 1:0;
                     valueUp = new ConstInt(num);
                 }
-            } else {
-
+            } else if (primaryExp != null) {
+                 primaryExp.buildIr();
             }
         }else{ // 不一定能计算出初值
-            if(primaryExp != null){
-                primaryExp.buildIr();
-            } else if (unaryExp!=null) {
+            if (unaryExp!=null) {
                 unaryExp.buildIr();
                 Value value = valueUp;
                 // '-' | '!' UnaryExp
@@ -94,8 +91,28 @@ public class UnaryExp extends Node{
                         Sub sub = builder.buildSub(curBlock, new ConstInt(0), valueUp);
                         valueUp = sub;
                     }
-                } else { // !
-
+                } else if(unaryOp.getOp().getType() == Token.TokenType.NOT){ //
+                    if(value.getValueType().isChar() || value.getValueType().isI1()){
+                        value = builder.buildZext(curBlock, value);
+                    }
+                    valueUp = builder.buildIcmp(Icmp.Cond.EQ, curBlock, ConstInt.ZERO, value);
+                    valueUp = builder.buildZext(curBlock, valueUp);
+                }
+            } else if (primaryExp != null) {
+                primaryExp.buildIr();
+            } else {
+                // 函数名称
+                String name = ident.getValue();
+                Value function = stack.getSymbol(name);
+                if(funcRParams != null){
+                    buildFuncRParams = true;
+                    funcRParams.buildIr();
+                    buildFuncRParams = false;
+                }
+                Call call = builder.buildCall(curBlock, (Function) function, funcParams);
+                valueUp = call;
+                if(funcParams != null){
+                    funcParams.clear();
                 }
             }
         }

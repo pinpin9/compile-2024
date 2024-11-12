@@ -1,6 +1,7 @@
 package ir.instructions.memory;
 
 import ir.BasicBlock;
+import ir.Value;
 import ir.instructions.Instruction;
 import ir.types.PointerType;
 import ir.types.ValueType;
@@ -20,14 +21,18 @@ public class Alloca extends Instruction {
     private ConstArray constArray = null; // 初始化值
     // 没有初始值
     public Alloca(ValueType allocatedType, String name, BasicBlock basicBlock) {
-        super(new PointerType(allocatedType),"%v" + name, basicBlock, new ArrayList<>());
+        super(new PointerType(allocatedType),name, basicBlock, new ArrayList<>());
         this.allocatedType = allocatedType;
     }
     // 有初始值
     public Alloca(ValueType allocatedType, String name, BasicBlock basicBlock, ConstArray constArray){
-        super(new PointerType(allocatedType), "%v" + name, basicBlock, new ArrayList<>());
+        super(new PointerType(allocatedType), name, basicBlock, new ArrayList<>());
         this.allocatedType = allocatedType;
         this.constArray = constArray;
+    }
+
+    public ValueType getAllocatedType(){
+        return allocatedType;
     }
 
     @Override

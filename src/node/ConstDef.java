@@ -61,25 +61,19 @@ public class ConstDef extends Node{
     @Override
     public void buildIr() {
         String name = ident.getValue();
-        // 变量
+        // 非数组
         if(constExp == null){
-            // 计算初始化值
+            // 计算初始化值，均记为ConstInt类型
             constInitVal.buildIr();
-            if(stack.isGlobal()){ // 全局常量
-                // 构建全局变量
-                builder.buildGlobalVariable(name, getValueType(), true, (Constant) valueUp);
-            }else { // 局部常量
-                Alloca alloca = builder.buildAlloca(getValueType(), curBlock, new ConstArray(new ArrayList<>(){{
-                    add((Constant) valueUp);
-                }}));
-//                builder.buildStore(curBlock, )
-            }
+            stack.addSymbol(name, valueUp);
         } else{ //数组
             constExp.buildIr();
             // 获取数组的长度
             int dim = ((ConstInt)valueUp).getValue();
+            // 获取数组的初始值，都可以计算出初值
             constInitVal.buildIr();
             ArrayList<Constant> constants = new ArrayList<>();
+            // 常量数组的每一个元素都必须给定初始值
             for(int i = 0; i<dim;i++){
                 if(i<valueUpList.size()){
                     if(isChar()){
@@ -90,13 +84,31 @@ public class ConstDef extends Node{
                 }else{
                     if(isChar()){
                         constants.add(new ConstChar(0));
-                    }else {
+                    }else{
                         constants.add(new ConstInt(0));
                     }
                 }
             }
             ConstArray constArray = new ConstArray(constants);
-            builder.buildGlobalVariable(name,getValueType(dim), true, constArray);
+            ValueType valueType = getValueType(dim);
+            if(stack.isGlobal()){ // 全局数组常量
+                builder.buildGlobalVariable(name, true, constArray);
+            }else{ // 局部数组常量
+                // 分配空间
+                Alloca alloca = builder.buildAlloca(valueType, curBlock);
+                // 加入符号表
+                stack.addSymbol(name, alloca);
+                // 获取数组第一个元素的地址
+                Value base = builder.buildGetElementPtr(curBlock, alloca, new ConstInt(0), new ConstInt(0));
+                for(int i = 0; i < valueUpList.size(); i++){
+                    Value addr = builder.buildGetElementPtr(curBlock, base, new ConstInt(i));
+                    Value value = valueUpList.get(i);
+                    if(isChar()){
+                        value = new ConstChar(((ConstInt)value).getValue());
+                    }
+                    builder.buildStore(curBlock, value, addr);
+                }
+            }
         }
     }
 

@@ -56,6 +56,7 @@ public class ConstInitVal extends Node{
 
     @Override
     public void buildIr() {
+        needCalExp = true;
         if(constExp!=null){
             constExp.buildIr();
         } else if (stringConst!=null) { // 数组
@@ -69,6 +70,7 @@ public class ConstInitVal extends Node{
                 char ch = string.charAt(i);
                 valueUpList.add(new ConstInt(ch));
             }
+            valueUpList.add(new ConstInt(0));
         } else {
             if(valueUpList!=null){
                 valueUpList.clear();
@@ -78,6 +80,7 @@ public class ConstInitVal extends Node{
                 valueUpList.add(valueUp);
             }
         }
+        needCalExp = false;
     }
 
     public void traverse() {

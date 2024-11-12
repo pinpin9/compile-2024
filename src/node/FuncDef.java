@@ -5,12 +5,17 @@ import ir.BasicBlock;
 import ir.Function;
 import ir.IrSymbolTable;
 import ir.Value;
+import ir.instructions.Instruction;
 import ir.instructions.memory.Alloca;
 import ir.instructions.memory.Store;
+import ir.instructions.terminator.Br;
+import ir.instructions.terminator.Ret;
 import ir.types.CharType;
 import ir.types.IntType;
 import ir.types.ValueType;
 import ir.types.VoidType;
+import ir.types.constants.ConstChar;
+import ir.types.constants.ConstInt;
 import symbol.Symbol;
 import symbol.Symbol.SymbolType;
 import token.Token;
@@ -69,13 +74,14 @@ public class FuncDef extends Node{
             }
         }
         sysArgs.clear();
+        stack.push(new IrSymbolTable());
         if(funcFParams!=null){
             funcFParams.buildIr();
         }
         // 构建当前函数块
         Function function = builder.buildFunction(false, ident.getValue(), valueType, sysArgs);
         curFunc = function;
-        stack.addSymbol(ident.getValue(), function);
+        stack.addSymbolToGlobal(ident.getValue(), function);
         // 构建基本块
         BasicBlock basicBlock = builder.buildBasicBlock(curFunc);
         curBlock = basicBlock;
@@ -83,11 +89,23 @@ public class FuncDef extends Node{
             // 构建参数列表的alloca，store指令
             buildParams();
         }
+        // 记录函数参数类型
+        rtnType = valueType;
         // 函数体构建
-        stack.push(new IrSymbolTable());
         block.buildIr();
-        stack.pop();
 
+        Instruction tailInstr = curBlock.getLastInstruction();
+        // 结尾没有指令或者指令不是跳转指令
+        if(tailInstr==null||!(tailInstr instanceof Ret || tailInstr instanceof Br)){
+            if( rtnType instanceof VoidType ){
+                builder.buildRet(curBlock);
+            } else if( rtnType instanceof IntType ){
+                builder.buildRet(curBlock, ConstInt.ZERO);
+            } else {
+                builder.buildRet(curBlock, ConstChar.ZERO);
+            }
+        }
+        stack.pop();
     }
 
     private void buildParams(){

@@ -18,11 +18,16 @@ import java.util.List;
 public class BasicBlock extends Value{
     private LinkedList<Instruction> instructions = new LinkedList<>();
     public BasicBlock(String name,Value parent){
-        super(new LabelType(),"%b" + name, parent);
+        super(new LabelType(), name, parent);
     }
-
     public LinkedList<Instruction> getInstructions() {
         return instructions;
+    }
+    public Instruction getLastInstruction(){
+        if(instructions.size()>0){
+            return instructions.getLast();
+        }
+        return null;
     }
 
     public void addHeadInstruction(Instruction instruction){

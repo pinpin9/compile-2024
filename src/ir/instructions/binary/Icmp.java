@@ -20,11 +20,6 @@ public class Icmp extends Instruction {
     public enum Cond{
         EQ,NE, // 相等和不相等
         SGT,SGE,SLT,SLE; // 有符号比较
-
-        @Override
-        public String toString() {
-            return this.toString().toLowerCase();
-        }
     }
     public Icmp(Cond cond, String name, BasicBlock parent, Value op1, Value op2){
         super(new IntType(1), name, parent, new ArrayList<>(){{
@@ -34,12 +29,35 @@ public class Icmp extends Instruction {
         this.cond = cond;
     }
 
+    private String getCond(Cond cond){
+        switch (cond){
+            case EQ -> {
+                return "eq";
+            }
+            case NE -> {
+                return "ne";
+            }
+            case SGE -> {
+                return "sge";
+            }
+            case SGT -> {
+                return "sgt";
+            }
+            case SLE -> {
+                return "sle";
+            }
+            case SLT -> {
+                return "slt";
+            }
+        }
+        return null;
+    }
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(getName()).append(" = ").append("icmp ").
-                append(cond.toString()).append(" ").append(getValueType()).append(" ").append(getOperands().get(0).
-                        getName()).append(" ").append(getOperands().get(1).getName());
+                append(getCond(cond)).append(" i32").append(" ").append(getOperands().get(0).
+                        getName()).append(", ").append(getOperands().get(1).getName());
         return stringBuilder.toString();
     }
 }

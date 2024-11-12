@@ -1,12 +1,18 @@
 package node;
 
 import error.SemanticError;
-import ir.Function;
-import ir.Value;
+import ir.*;
 import ir.instructions.Call;
+import ir.instructions.Trunc;
+import ir.instructions.Zext;
+import ir.instructions.memory.Getelementptr;
+import ir.types.*;
+import ir.types.constants.ConstInt;
 import token.Token;
+import tools.StrTool;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 /*
@@ -24,8 +30,6 @@ ForStmt与Cond中缺省一个，3种情况 3. ForStmt与Cond中缺省两个，3�
 | 'printf''('StringConst {','Exp}')'';' // 1.有Exp 2.无Exp
  */
 public class Stmt extends Node{
-
-
     public enum StmtType{
         LVALASSIGN, // LVal '=' Exp ';'
         EXP,        // [Exp] ';'
@@ -72,9 +76,16 @@ public class Stmt extends Node{
     private List<Token> commas = new ArrayList<>();
     private List<Exp> expList = new ArrayList<>();
 
+    //=========中间代码生成=========//
+    private ValueType returnType;
+    public void setRtnType(ValueType valueType){
+        returnType = valueType;
+    }
+
     public StmtType getType(){
         return type;
     }
+
 
     public Stmt(StmtType type, LVal lVal, Token assign, Exp exp, Token semicolonToken){
         super(NodeType.Stmt);
@@ -262,18 +273,194 @@ public class Stmt extends Node{
     @Override
     public void buildIr() {
         switch (type){
-            case RETURN -> { // return [exp];
-                if(exp == null){ // 无返回值
-                    builder.buildRet(curBlock);
-                }else{ // 有返回值
-                    // 需要计算出返回值
-                    needCalExp = true;
+            case RETURN -> buildReturn();
+            case LVALGETINT -> buildLValGetint();
+            case LVALGETCHAR -> buildLValGetChar();
+            case EXP -> {
+                if(exp!=null){
                     exp.buildIr();
-                    needCalExp = false;
-                    builder.buildRet(curBlock, valueUp);
                 }
             }
-            case LVALGETINT -> buildLValGetint();
+            case LVALASSIGN -> buildLValAssign();
+            case Block -> buildBlock();
+            case PRINTF -> buildPrintf();
+            case CONTINUE,BREAK -> buildBreakOrContinue();
+            case IF -> buildIf();
+            case FOR -> buildFor();
+        }
+    }
+
+    // 循环的时候根据cond进行判断，如果cond为真则进入loopBlock，为假则进入nextBlock
+    private void buildFor() {
+        BasicBlock condBlock = null; // 条件
+        BasicBlock loopBlock = builder.buildBasicBlock(curFunc); // 循环体
+        BasicBlock selfBlock = builder.buildBasicBlock(curFunc); // 循环改变语句
+        BasicBlock nextBlock = builder.buildBasicBlock(curFunc); // 下一个基本块
+
+        endLoop.push(selfBlock);
+        nextLoop.push(nextBlock);
+        if(forStmt1 != null){
+            forStmt1.buildIr();
+        }
+        // 循环条件
+        if(cond != null){
+            condBlock = builder.buildBasicBlock(curFunc);
+            builder.buildBr(curBlock, condBlock);
+            cond.setTrueBlock(loopBlock);
+            cond.setFalseBlock(nextBlock);
+            curBlock = condBlock;
+            cond.buildIr();
+        } else {
+            builder.buildBr(curBlock, loopBlock);
+        }
+
+        // 构建循环体
+        curBlock = loopBlock;
+        stmt1.buildIr();
+        builder.buildBr(curBlock, selfBlock);
+
+        // 构建循环改变条件
+        curBlock = selfBlock;
+        if(forStmt2!=null){
+            forStmt2.buildIr();
+        }
+        if(cond!=null){ // 如果循环控制条件不为空，则跳转到控制
+            builder.buildBr(curBlock, condBlock);
+        }else{ // 否则跳转到循环体语句
+            builder.buildBr(curBlock, loopBlock);
+        }
+
+        nextLoop.pop();
+        endLoop.pop();
+        curBlock = nextBlock;
+
+    }
+
+    private void buildIf() {
+        BasicBlock trueBlock = builder.buildBasicBlock(curFunc);
+        BasicBlock falseBlock, nextBlock;
+        falseBlock = builder.buildBasicBlock(curFunc);
+        nextBlock = stmt2==null ? falseBlock: builder.buildBasicBlock(curFunc);
+
+        cond.setTrueBlock(trueBlock);
+        cond.setFalseBlock(falseBlock);
+        cond.buildIr();
+
+        // 构建正确条件基本块
+        curBlock = trueBlock;
+        stmt1.setRtnType(rtnType);
+        stmt1.buildIr();
+        builder.buildBr(curBlock, nextBlock);
+
+        if(stmt2!=null){
+            curBlock = falseBlock;
+            stmt2.buildIr();
+            builder.buildBr(curBlock, nextBlock);
+        }
+        curBlock = nextBlock;
+    }
+
+    private void buildBreakOrContinue() {
+        if( breakOrContinue.getType() == Token.TokenType.BREAKTK ){
+            builder.buildBr(curBlock,nextLoop.peek());
+        } else {
+            builder.buildBr(curBlock,endLoop.peek());
+        }
+        curBlock = new BasicBlock("dead_block", new Function(false,"dead_function", new VoidType(), new ArrayList<>()));
+    }
+
+    private void buildPrintf() {
+        // 构造字符串常量StringConst
+        List<String> stringList = StrTool.getStrings(stringConst.getValue());
+        List<Value> outputList = new ArrayList<>();
+        for(int i = 0;i<expList.size();i++){
+            expList.get(i).buildIr();
+            outputList.add(valueUp);
+        }
+        int cnt = 0;
+        for(int i = 0;i<stringList.size();i++){
+            String string = stringList.get(i);
+            Value value, finalValue;
+            if(string.equals("%c")){
+                value = outputList.get(cnt);
+                cnt++;
+                if(value.getValueType() instanceof IntType){
+                    finalValue = builder.buildTrunc(curBlock, value);
+                }else {
+                    finalValue = value;
+                }
+                builder.buildCall(curBlock, Function.putchar, new ArrayList<>(){{
+                    add(finalValue);
+                }});
+            } else if (string.equals("%d")) {
+                value = outputList.get(cnt);
+                cnt++;
+                if(value.getValueType() instanceof CharType){
+                    finalValue = builder.buildZext(curBlock, value);
+                } else {
+                    finalValue = value;
+                }
+                builder.buildCall(curBlock, Function.putint, new ArrayList<>(){{
+                    add(finalValue);
+                }});
+            } else {
+                GlobalVariable constString = builder.buildConstStr(string);
+                Getelementptr addr = builder.buildGetElementPtr(curBlock, constString, new ConstInt(0), new ConstInt(0));
+                builder.buildCall(curBlock, Function.putstr, new ArrayList<>(){{
+                    add(addr);
+                }});
+            }
+        }
+    }
+
+    private void buildBlock(){
+        stack.push(new IrSymbolTable());
+        block.buildIr();
+        stack.pop();
+    }
+
+    private void buildReturn(){
+        if(exp == null){ // 无返回值
+            builder.buildRet(curBlock);
+        }else{ // 有返回值
+            exp.buildIr();
+            if(rtnType instanceof IntType && valueUp.getValueType() instanceof CharType){
+                valueUp = builder.buildZext(curBlock, valueUp);
+            } else if (rtnType instanceof CharType && valueUp.getValueType() instanceof IntType) {
+                valueUp = builder.buildTrunc(curBlock, valueUp);
+            }
+            builder.buildRet(curBlock, valueUp);
+        }
+    }
+
+    private void buildLValAssign() {
+        lValAtLeft = true;
+        lVal.buildIr();
+        lValAtLeft = false;
+        Value lValue = valueUp;
+        exp.buildIr();
+        Value value = valueUp;
+        if(((PointerType)lValue.getValueType()).getPointingType() instanceof CharType && value.getValueType() instanceof IntType){
+            value = builder.buildTrunc(curBlock, value);
+        } else if (((PointerType)lValue.getValueType()).getPointingType() instanceof IntType && value.getValueType() instanceof CharType) {
+            value = builder.buildZext(curBlock, value);
+        }
+        builder.buildStore(curBlock, value, lValue);
+    }
+
+    private void buildLValGetChar() {
+        // 不需要Load语句，直接返回指针类型
+        lValAtLeft = true;
+        lVal.buildIr();
+        lValAtLeft = false;
+        Value lValue = valueUp;
+        Call call = builder.buildCall(curBlock, Function.getchar, new ArrayList<>());
+        if(((PointerType)(lValue.getValueType())).getPointingType() instanceof CharType){
+            // 为char类型变量赋int值，需要先进行缩减
+            Trunc trunc = builder.buildTrunc(curBlock, call);
+            builder.buildStore(curBlock, trunc, lValue);
+        } else {
+            builder.buildStore(curBlock, call, lValue);
         }
     }
 
@@ -284,8 +471,16 @@ public class Stmt extends Node{
         lValAtLeft = false;
         Value lValue = valueUp;
         Call call = builder.buildCall(curBlock, Function.getint, new ArrayList<>());
-        builder.buildStore(curBlock, call, lValue);
+        if(((PointerType)(lValue.getValueType())).getPointingType() instanceof CharType){
+            // 为char类型变量赋int值，需要先进行缩减
+            Trunc trunc = builder.buildTrunc(curBlock, lValue);
+            builder.buildStore(curBlock, trunc, lValue);
+        } else {
+            builder.buildStore(curBlock, call, lValue);
+        }
     }
+
+
 
     public void traverse() {
         switch (type){

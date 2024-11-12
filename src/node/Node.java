@@ -6,6 +6,7 @@ import ir.types.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public abstract class Node {
     public enum NodeType{
@@ -66,15 +67,21 @@ public abstract class Node {
     protected static Function curFunc = null;
     // 当前基本块
     protected static BasicBlock curBlock = null;
+    protected static Stack<BasicBlock> endLoop = new Stack<>();
+    protected static Stack<BasicBlock> nextLoop = new Stack<>();
 
     /*==========继承属性==========*/
     protected static boolean needCalExp = false; // 表达式可求值，求值结果为valueUp，用于全局变量的初始化部分
+    protected static ValueType rtnType = null; // 函数返回类型
+    protected static boolean lValAtLeft = false; // 是赋值变量还是计算变量
+    protected static boolean buildFuncRParams = false;
 
     /*==========综合属性==========*/
     protected static List<ValueType> sysArgs = new ArrayList<>(); // 函数的参数类型数组，所有的参数，往上传
     protected static ValueType argType = null; // 函数的参数类型
     protected static Value valueUp = null; // Value类型的回传
     protected static List<Value> valueUpList = new ArrayList<>(); // Value类型数组的回传
+    protected static List<Value> funcParams = new ArrayList<>(); // 函数实参
+    protected static boolean singleCmp = false; // 是否只有单个符号
 
-    protected static boolean lValAtLeft = false;
 }

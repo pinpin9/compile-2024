@@ -16,6 +16,6 @@ public class ZeroInitializer extends Constant{
 
     @Override
     public String toString() {
-        return "zeroInitializer";
+        return "zeroinitializer";
     }
 }

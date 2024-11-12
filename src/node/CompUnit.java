@@ -56,7 +56,7 @@ public class CompUnit extends Node{
         Function.putint = builder.buildFunction(true, "putint", new VoidType(), new ArrayList<>(){{
             add(new IntType(32));
         }});
-        Function.putchar = builder.buildFunction(true, "putchar", new VoidType(), new ArrayList<>(){{
+        Function.putchar = builder.buildFunction(true, "putch", new VoidType(), new ArrayList<>(){{
             add(new CharType());
         }});
         Function.putstr = builder.buildFunction(true, "putstr", new VoidType(), new ArrayList<>(){{

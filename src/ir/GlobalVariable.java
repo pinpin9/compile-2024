@@ -13,8 +13,8 @@ public class GlobalVariable extends User{
     // 初始化
     private Constant initValue = null;
     // 定义全局变量，常量一定有初始化值，变量如果没有初始化值，则初始化为0
-    public GlobalVariable(String name, ValueType valueType, boolean isConst, Constant initValue){
-        super(new PointerType(valueType),"@"+name,Module.getInstance(),new ArrayList<Value>(){{
+    public GlobalVariable(String name, boolean isConst, Constant initValue){
+        super(new PointerType(initValue.getValueType()),"@"+name,Module.getInstance(),new ArrayList<Value>(){{
             add(initValue);
         }});
         this.isConst = isConst;

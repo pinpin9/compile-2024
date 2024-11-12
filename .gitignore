@@ -30,3 +30,9 @@ bin/
 # 排除测试文件
 *.txt
 /llvm/src/testfile.c
+/src/ClangRunner.java
+/src/Compiler.zip
+/src/config.json
+/lib.ll
+/out.ll
+/token.zip

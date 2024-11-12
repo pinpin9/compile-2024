@@ -1,6 +1,10 @@
 package node;
 
 import error.SemanticError;
+import ir.Value;
+import ir.types.CharType;
+import ir.types.IntType;
+import ir.types.PointerType;
 import token.Token;
 
 // ForStmt → LVal '=' Exp
@@ -26,7 +30,18 @@ public class ForStmt extends Node{
 
     @Override
     public void buildIr() {
-
+        lValAtLeft = true;
+        lVal.buildIr();
+        lValAtLeft = false;
+        Value lValue = valueUp;
+        exp.buildIr();
+        Value value = valueUp;
+        if(((PointerType)lValue.getValueType()).getPointingType() instanceof CharType && value.getValueType() instanceof IntType){
+            value = builder.buildTrunc(curBlock, value);
+        } else if (((PointerType)lValue.getValueType()).getPointingType() instanceof IntType && value.getValueType() instanceof CharType) {
+            value = builder.buildZext(curBlock, value);
+        }
+        builder.buildStore(curBlock, value, lValue);
     }
 
     public void traverse() {

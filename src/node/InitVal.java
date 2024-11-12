@@ -1,5 +1,6 @@
 package node;
 
+import ir.types.constants.ConstChar;
 import ir.types.constants.ConstInt;
 import token.Token;
 
@@ -67,6 +68,7 @@ public class InitVal extends Node{
                 char ch = string.charAt(i);
                 valueUpList.add(new ConstInt(ch));
             }
+            valueUpList.add(new ConstInt(0));
         } else {
             for(Exp exp: expList){
                 if(stack.isGlobal()){
@@ -74,10 +76,11 @@ public class InitVal extends Node{
                     exp.buildIr();
                     needCalExp = false;
                     valueUpList.add(valueUp);
+                } else {
+                    exp.buildIr();
+                    valueUpList.add(valueUp);
                 }
-
             }
-
         }
     }
 

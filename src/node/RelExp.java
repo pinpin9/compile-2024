@@ -1,5 +1,7 @@
 package node;
 
+import ir.Value;
+import ir.instructions.binary.Icmp;
 import token.Token;
 
 import java.util.List;
@@ -28,7 +30,26 @@ public class RelExp extends Node{
 
     @Override
     public void buildIr() {
-
+        addExps.get(0).buildIr();
+        Value lValue = valueUp;
+        for(int i = 1;i<addExps.size();i++){
+            singleCmp = false;
+            addExps.get(i).buildIr();
+            Value rValue = valueUp;
+            if(lValue.getValueType().isI1() || lValue.getValueType().isChar()){
+                lValue = builder.buildZext(curBlock, lValue);
+            }
+            if(rValue.getValueType().isI1() || rValue.getValueType().isChar()){
+                rValue = builder.buildZext(curBlock, rValue);
+            }
+            switch (ops.get(i-1).getType()){
+                case LSS -> lValue = builder.buildIcmp(Icmp.Cond.SLT, curBlock, lValue, rValue); // <
+                case LEQ -> lValue = builder.buildIcmp(Icmp.Cond.SLE, curBlock, lValue, rValue); // <=
+                case GRE -> lValue = builder.buildIcmp(Icmp.Cond.SGT, curBlock, lValue, rValue); // >
+                case GEQ -> lValue = builder.buildIcmp(Icmp.Cond.SGE, curBlock, lValue, rValue); // >=
+            }
+        }
+        valueUp = lValue;
     }
 
     public void traverse() {

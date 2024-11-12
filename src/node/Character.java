@@ -25,7 +25,6 @@ public class Character extends Node{
             ch = getValue(charConst.getValue().charAt(2));
         }
         valueUp = new ConstChar(ch);
-
     }
 
     private int getValue(char ch){

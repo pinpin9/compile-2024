@@ -2,22 +2,27 @@ package ir;
 
 import ir.instructions.Call;
 import ir.instructions.Instruction;
+import ir.instructions.Trunc;
+import ir.instructions.Zext;
 import ir.instructions.binary.*;
 import ir.instructions.memory.Alloca;
+import ir.instructions.memory.Getelementptr;
 import ir.instructions.memory.Load;
 import ir.instructions.memory.Store;
+import ir.instructions.terminator.Br;
 import ir.instructions.terminator.Ret;
+import ir.types.CharType;
 import ir.types.IntType;
 import ir.types.ValueType;
+import ir.types.VoidType;
 import ir.types.constants.ConstArray;
+import ir.types.constants.ConstStr;
 import ir.types.constants.Constant;
 import node.CompUnit;
 import settings.Settings;
 import tools.IO;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class IrBuilder {
     private static IrBuilder irBuilder = new IrBuilder();
@@ -26,6 +31,8 @@ public class IrBuilder {
     }
     private Module module = Module.getInstance();
     IrSymbolStack stack = IrSymbolStack.getInstance();
+
+    public HashMap<String, GlobalVariable> constStrings = new HashMap<>();
 
     // 命名计数器
     private int nameCnt = 0;
@@ -40,9 +47,16 @@ public class IrBuilder {
     }
 
     public String getName(){
-        return Integer.toString(nameCnt++);
+        return "%v"+nameCnt++;
+    }
+    public String getBranchName(){
+        return "%b" + nameCnt++;
     }
 
+    private int strCnt = 0;
+    private String getStrName(){
+        return ".str"+strCnt++;
+    }
     /**
      * 方法描述： 构建函数模块
      * 命名计数器清零，module中增加该函数模块，栈顶符号表加入函数名
@@ -64,25 +78,40 @@ public class IrBuilder {
      * @param function 所属Function块
      */
     public BasicBlock buildBasicBlock(Function function){
-        BasicBlock block = new BasicBlock(getName(), function);
+        BasicBlock block = new BasicBlock(getBranchName(), function);
         function.addBasicBlock(block);
         return block;
     }
     /**
-     * 方法描述： 添加全局变量
+     * 方法描述： 添加全局量
      * 常量 | 变量
+     * 新建一个globalVariable，加入module模块，并加入符号表
      * @param name 变量 | 常量名称
-     * @param valueType 类型，intType | charType | ArrayType
      * @param isConst 是否常量
      * @param initValue 初始化值
      */
-    public GlobalVariable buildGlobalVariable(String name,ValueType valueType, boolean isConst, Constant initValue){
-        GlobalVariable globalVariable = new GlobalVariable(name, valueType, isConst, initValue);
+    public GlobalVariable buildGlobalVariable(String name, boolean isConst, Constant initValue){
+        GlobalVariable globalVariable = new GlobalVariable(name, isConst, initValue);
         module.addGlobalVariable(globalVariable);
         stack.addSymbol(name, globalVariable);
         return globalVariable;
     }
 
+    /**
+     * 方法描述： 构建字符串常量
+     * 新建一个globalVariable，加入module模块，并加入符号表
+     * @param string 常量字符串
+     */
+    public GlobalVariable buildConstStr(String string){
+        if(constStrings.containsKey(string)){
+            return constStrings.get(string);
+        }else{
+            GlobalVariable constString = new GlobalVariable(getStrName(), true, new ConstStr(string));
+            module.addGlobalVariable(constString);
+            constStrings.put(string, constString);
+            return constString;
+        }
+    }
     /**
      * 方法描述： 构建Alloca指令
      * 无初始值
@@ -183,10 +212,54 @@ public class IrBuilder {
         return srem;
     }
 
-    public Call buildCall(BasicBlock block, Function function, ArrayList<Value> args){
-        Call call = new Call(getName(),block, function, args);
+    public Call buildCall(BasicBlock block, Function function, List<Value> args){
+        Call call;
+        if(function.getRetType() instanceof VoidType){
+            call = new Call("",block, function, args);
+        }else{
+            call = new Call(getName(),block, function, args);
+        }
         block.addTailInstruction(call);
         return call;
+    }
+
+    public Zext buildZext(BasicBlock block, Value value){
+        Zext zext = new Zext(getName(), block, value);
+        block.addTailInstruction(zext);
+        return zext;
+    }
+
+    public Trunc buildTrunc(BasicBlock block, Value value){
+        Trunc trunc = new Trunc(getName(), block, value);
+        block.addTailInstruction(trunc);
+        return trunc;
+    }
+
+    public Getelementptr buildGetElementPtr(BasicBlock block, Value base, Value index){
+        Getelementptr getelementptr = new Getelementptr(getName(), block, base, index);
+        block.addTailInstruction(getelementptr);
+        return getelementptr;
+    }
+
+    public Getelementptr buildGetElementPtr(BasicBlock block, Value base, Value firstIndex, Value secondIndex){
+        Getelementptr getelementptr = new Getelementptr(getName(), block, base, firstIndex, secondIndex);
+        block.addTailInstruction(getelementptr);
+        return getelementptr;
+    }
+
+    public Icmp buildIcmp(Icmp.Cond cond, BasicBlock block, Value value1, Value value2){
+        Icmp icmp = new Icmp(cond, getName(), block, value1, value2);
+        block.addTailInstruction(icmp);
+        return icmp;
+    }
+
+    public void buildBr(BasicBlock parent, BasicBlock dest){ // 无条件条件
+        Br br = new Br(parent, dest);
+        parent.addTailInstruction(br);
+    }
+    public void buildBr(BasicBlock parent, Value cond, BasicBlock ifTrue, BasicBlock ifFalse){
+        Br br = new Br(parent, cond, ifTrue, ifFalse);
+        parent.addTailInstruction(br);
     }
 
     // 输出

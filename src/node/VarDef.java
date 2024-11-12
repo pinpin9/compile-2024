@@ -1,12 +1,11 @@
 package node;
 
 import error.SemanticError;
+import ir.Value;
 import ir.instructions.memory.Alloca;
+import ir.instructions.memory.Getelementptr;
 import ir.instructions.memory.Store;
-import ir.types.ArrayType;
-import ir.types.CharType;
-import ir.types.IntType;
-import ir.types.ValueType;
+import ir.types.*;
 import ir.types.constants.*;
 import token.Token;
 import symbol.Symbol.SymbolType;
@@ -60,61 +59,100 @@ public class VarDef extends Node{
             if(stack.isGlobal()){ // 全局变量
                 Constant init = null;
                 if(initVal == null){
-                    if(bType.getbType().getType()== Token.TokenType.INTTK){
-                        init = new ConstInt(0);
-                    } else{
-                        init = new ConstChar(0);
-                    }
+                    init = bType.getbType().getType() == Token.TokenType.INTTK ? new ConstInt(0) : new ConstChar(0);
                 }else{
                     needCalExp = true;
                     initVal.buildIr();
                     needCalExp = false;
                     init = (Constant) valueUp;
                 }
-                builder.buildGlobalVariable(name, getValueType(), false, init);
-            } else{ // 局部变量
+                builder.buildGlobalVariable(name, false, init);
+            } else { // 局部变量
                 Alloca alloca = builder.buildAlloca(getValueType(), curBlock);
                 // 符号表中增加该局部变量
                 stack.addSymbol(name, alloca);
+                // 得到的可能是load，add，getelementptr，constant等
                 if(initVal!=null){
                     initVal.buildIr();
+                    if(alloca.getAllocatedType() instanceof CharType && valueUp.getValueType() instanceof IntType){
+                        if(valueUp instanceof ConstInt){
+                            valueUp = new ConstChar(((ConstInt)valueUp).getValue());
+                        }else{
+                            valueUp = builder.buildTrunc(curBlock, valueUp);
+                        }
+                    } else if (alloca.getAllocatedType() instanceof IntType && valueUp.getValueType() instanceof CharType) {
+                        if(valueUp instanceof ConstChar){
+                            valueUp = new ConstInt(((ConstChar)valueUp).getValue());
+                        } else{
+                            valueUp = builder.buildZext(curBlock, valueUp);
+                        }
+                    }
                     Store store = builder.buildStore(curBlock, valueUp, alloca);
                 }
-
             }
         }else{ // 数组
             constExp.buildIr();
             int dim = ((ConstInt)valueUp).getValue();
-            if(stack.isGlobal()){
+            if(stack.isGlobal()){ // 全局数组变量
                 // 为读取当前初始化节点，清空综合属性上传的值
                 if (valueUpList!=null){
+                    valueUpList.clear();
+                }
+                // 初始化值，构建常量数组
+                Constant constArray = null;
+                if(initVal!=null){ // 有初始化
+                    initVal.buildIr();
+                    // 存储计算出来的数组初始化值
+                    ArrayList<Constant> constants = new ArrayList<>();
+                    for(int i = 0; i<dim;i++){
+                        if(i<valueUpList.size()){
+                            if(isChar()){
+                                constants.add(new ConstChar(((ConstInt)valueUpList.get(i)).getValue()));
+                            }else {
+                                constants.add((Constant) valueUpList.get(i));
+                            }
+                        }else{
+                            if(isChar()){
+                                constants.add(new ConstChar(0));
+                            }else {
+                                constants.add(new ConstInt(0));
+                            }
+                        }
+                    }
+                    constArray = new ConstArray(constants);
+                } else { // 没有初始化，利用zeroInitializer进行出事啊
+                    constArray = new ZeroInitializer(new ArrayType(getValueType(), dim));
+                }
+                builder.buildGlobalVariable(name,false, constArray);
+            } else { // 局部数组变量
+                Alloca alloca = builder.buildAlloca(getValueType(dim), curBlock);
+                stack.addSymbol(name, alloca);
+                Getelementptr base = builder.buildGetElementPtr(curBlock, alloca, new ConstInt(0), new ConstInt(0));
+                if(valueUpList != null){
                     valueUpList.clear();
                 }
                 if(initVal!=null){
                     initVal.buildIr();
                 }
-                ArrayList<Constant> constants = new ArrayList<>();
-                for(int i = 0; i<dim;i++){
-                    if(i<valueUpList.size()){
-                        if(isChar()){
-                            constants.add(new ConstChar(((ConstInt)valueUpList.get(i)).getValue()));
-                        }else {
-                            constants.add((Constant) valueUpList.get(i));
+                for(int i = 0; i < valueUpList.size(); i++){
+                    Value addr = builder.buildGetElementPtr(curBlock, base, new ConstInt(i));
+                    Value value = valueUpList.get(i);
+                    if(((PointerType)addr.getValueType()).getPointingType() instanceof IntType && value.getValueType() instanceof CharType){
+                        if(value instanceof ConstChar){
+                            value = new ConstInt(((ConstChar)value).getValue());
+                        }else{
+                            value = builder.buildZext(curBlock, value);
                         }
-                    }else{
-                        if(isChar()){
-                            constants.add(new ConstChar(0));
-                        }else {
-                            constants.add(new ConstInt(0));
+                    } else if(((PointerType)addr.getValueType()).getPointingType() instanceof CharType && value.getValueType() instanceof IntType){
+                        if(value instanceof ConstInt){
+                            value = new ConstChar(((ConstInt)value).getValue());
+                        }else{
+                            value = builder.buildTrunc(curBlock, value);
                         }
                     }
+                    builder.buildStore(curBlock, value, addr);
                 }
-                ConstArray constArray = new ConstArray(constants);
-                builder.buildGlobalVariable(name,getValueType(dim), false, constArray);
             }
-
-
-
         }
     }
 

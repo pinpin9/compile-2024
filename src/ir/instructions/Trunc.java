@@ -15,7 +15,7 @@ import java.util.ArrayList;
 // <result> = trunc <ty> <value> to <ty2>
 public class Trunc extends Instruction{
     public Trunc(String name, BasicBlock parent, Value value){
-        super(new IntType(8), name, parent, new ArrayList<>(){{
+        super(new IntType(8),name, parent, new ArrayList<>(){{
             add(value);
         }});
     }

@@ -45,6 +45,7 @@ public class MainFuncDef extends Node{
         curFunc = mainFunc;
         // 新建一个符号表入栈
         stack.push(new IrSymbolTable());
+        rtnType = new IntType(32);
         // 构建基本块
         BasicBlock basicBlock = builder.buildBasicBlock(curFunc);
         curBlock = basicBlock;

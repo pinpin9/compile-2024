@@ -1,6 +1,7 @@
 package node;
 
 // ConstExp → AddExp
+// 只能由常数和常量组成
 public class ConstExp extends Node{
     private AddExp addExp;
     public ConstExp(AddExp addExp){

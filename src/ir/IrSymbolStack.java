@@ -16,6 +16,7 @@ public class IrSymbolStack {
         return irSymbolStack;
     }
     private final Stack<IrSymbolTable> stack = new Stack<>();
+    private IrSymbolTable globalSymbolTable = IrSymbolTable.globalSymbolTable;
     // 初始化符号栈
     public void init(){
         stack.clear();
@@ -53,6 +54,9 @@ public class IrSymbolStack {
         return null;
     }
 
+    public void addSymbolToGlobal(String name, Value value){
+        globalSymbolTable.addSymbol(name, value);
+    }
     // 确认函数定义在全局符号表中
     public Value getSymbolFromGlobal(String name){
         return IrSymbolTable.globalSymbolTable.getSymbol(name);

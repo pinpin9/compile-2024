@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class Load extends Instruction {
     private ValueType loadType; // load出来的值类型
     public Load(String name, BasicBlock basicBlock, Value pointer){
-        super(((PointerType)pointer.getValueType()).getPointingType(), "%v" + name, basicBlock,new ArrayList<>(){{
+        super(((PointerType)pointer.getValueType()).getPointingType(), name, basicBlock,new ArrayList<>(){{
             add(pointer);
         }});
         loadType = ((PointerType)pointer.getValueType()).getPointingType();
