@@ -47,6 +47,10 @@ public class Function extends User{
         return irSymbolTable;
     }
 
+    public int getArgsCnt(){
+        return params.size();
+    }
+
     public void setIrSymbolTable(IrSymbolTable irSymbolTable) {
         this.irSymbolTable = irSymbolTable;
     }

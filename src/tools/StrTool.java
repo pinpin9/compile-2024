@@ -52,9 +52,10 @@ public class StrTool {
         for(int i = 0;i<string.length();i++){
             cnt ++;
             if(string.charAt(i)=='\\'){
-                i+=2;
+                i++;
             }
         }
+        System.out.println(cnt);
         return cnt;
     }
 }

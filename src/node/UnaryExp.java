@@ -14,6 +14,9 @@ import ir.types.constants.Constant;
 import symbol.Symbol;
 import token.Token;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // UnaryExp → PrimaryExp | Ident '(' [FuncRParams] ')' | UnaryOp UnaryExp
 public class UnaryExp extends Node{
     private PrimaryExp primaryExp = null;
@@ -109,11 +112,13 @@ public class UnaryExp extends Node{
                     funcRParams.buildIr();
                     buildFuncRParams = false;
                 }
-                Call call = builder.buildCall(curBlock, (Function) function, funcParams);
-                valueUp = call;
-                if(funcParams != null){
-                    funcParams.clear();
+                List<Value> params = new ArrayList<>();
+                for(int i=((Function)function).getArgsCnt()-1;i>=0;i--){
+                    Value value = funcParams.pop();
+                    params.add(0,value);
                 }
+                Call call = builder.buildCall(curBlock, (Function) function, params);
+                valueUp = call;
             }
         }
     }

@@ -81,7 +81,7 @@ public abstract class Node {
     protected static ValueType argType = null; // 函数的参数类型
     protected static Value valueUp = null; // Value类型的回传
     protected static List<Value> valueUpList = new ArrayList<>(); // Value类型数组的回传
-    protected static List<Value> funcParams = new ArrayList<>(); // 函数实参
+    protected static Stack<Value> funcParams = new Stack<>(); // 函数实参
     protected static boolean singleCmp = false; // 是否只有单个符号
 
 }
