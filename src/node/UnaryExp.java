@@ -112,10 +112,17 @@ public class UnaryExp extends Node{
                     funcRParams.buildIr();
                     buildFuncRParams = false;
                 }
+                List<Value> args = ((Function)function).getParams();
                 List<Value> params = new ArrayList<>();
-                for(int i=((Function)function).getArgsCnt()-1;i>=0;i--){
-                    Value value = funcParams.pop();
-                    params.add(0,value);
+                for(int i=args.size()-1;i>=0;i--){
+                    Value arg = args.get(i);
+                    Value param = funcParams.pop();
+                    if(arg.getValueType() instanceof IntType && param.getValueType() instanceof CharType){
+                        param = builder.buildZext(curBlock, param);
+                    } else if (arg.getValueType() instanceof CharType && param.getValueType() instanceof IntType) {
+                        param = builder.buildTrunc(curBlock, param);
+                    }
+                    params.add(0,param);
                 }
                 Call call = builder.buildCall(curBlock, (Function) function, params);
                 valueUp = call;
