@@ -90,7 +90,7 @@ public class VarDef extends Node{
                             valueUp = builder.buildZext(curBlock, valueUp);
                         }
                     }
-                    Store store = builder.buildStore(curBlock, valueUp, alloca);
+                    builder.buildStore(curBlock, valueUp, alloca);
                 }
             }
         }else{ // 数组
