@@ -39,12 +39,6 @@ public class EqExp extends Node{
             singleCmp = false;
             relExps.get(i).buildIr();
             Value rValue = valueUp;
-            if(lValue.getValueType().isI1() || lValue.getValueType().isChar()){
-                lValue = builder.buildZext(curBlock, lValue);
-            }
-            if (rValue.getValueType().isI1() || rValue.getValueType().isChar()){
-                rValue = builder.buildZext(curBlock, rValue);
-            }
             switch (ops.get(i-1).getType()){
                 case EQL -> lValue = builder.buildIcmp(Icmp.Cond.EQ, curBlock, lValue, rValue); // ==
                 case NEQ -> lValue = builder.buildIcmp(Icmp.Cond.NE, curBlock, lValue, rValue); // !=

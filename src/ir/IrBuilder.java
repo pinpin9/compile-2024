@@ -1,7 +1,6 @@
 package ir;
 
 import ir.instructions.Call;
-import ir.instructions.Instruction;
 import ir.instructions.Trunc;
 import ir.instructions.Zext;
 import ir.instructions.binary.*;
@@ -11,7 +10,6 @@ import ir.instructions.memory.Load;
 import ir.instructions.memory.Store;
 import ir.instructions.terminator.Br;
 import ir.instructions.terminator.Ret;
-import ir.types.CharType;
 import ir.types.IntType;
 import ir.types.ValueType;
 import ir.types.VoidType;
@@ -183,30 +181,40 @@ public class IrBuilder {
      * @param value2 操作数2
      */
     public Add buildAdd(BasicBlock block, Value value1, Value value2){
+        value1 = transBinary(block, value1);
+        value2 = transBinary(block, value2);
         Add add = new Add(new IntType(32), getName(), block, value1, value2);
         block.addTailInstruction(add);
         return add;
     }
 
     public Sub buildSub(BasicBlock block, Value value1, Value value2){
+        value1 = transBinary(block, value1);
+        value2 = transBinary(block, value2);
         Sub sub = new Sub(new IntType(32), getName(), block, value1, value2);
         block.addTailInstruction(sub);
         return sub;
     }
 
     public Mul buildMul(BasicBlock block, Value value1, Value value2){
+        value1 = transBinary(block, value1);
+        value2 = transBinary(block, value2);
         Mul mul = new Mul(new IntType(32), getName(), block, value1, value2);
         block.addTailInstruction(mul);
         return mul;
     }
 
     public Sdiv buildSdiv(BasicBlock block, Value value1, Value value2){
+        value1 = transBinary(block, value1);
+        value2 = transBinary(block, value2);
         Sdiv sdiv = new Sdiv(new IntType(32), getName(), block, value1, value2);
         block.addTailInstruction(sdiv);
         return sdiv;
     }
 
     public Srem buildSrem(BasicBlock block, Value value1, Value value2){
+        value1 = transBinary(block, value1);
+        value2 = transBinary(block, value2);
         Srem srem = new Srem(new IntType(32), getName(), block, value1, value2);
         block.addTailInstruction(srem);
         return srem;
@@ -248,6 +256,8 @@ public class IrBuilder {
     }
 
     public Icmp buildIcmp(Icmp.Cond cond, BasicBlock block, Value value1, Value value2){
+        value1 = transBinary(block, value1);
+        value2 = transBinary(block, value2);
         Icmp icmp = new Icmp(cond, getName(), block, value1, value2);
         block.addTailInstruction(icmp);
         return icmp;
@@ -261,6 +271,14 @@ public class IrBuilder {
         Br br = new Br(parent, cond, ifTrue, ifFalse);
         parent.addTailInstruction(br);
     }
+
+    private Value transBinary(BasicBlock block, Value value){
+        if(value.getValueType().isI1() || value.getValueType().isChar()){
+            value = buildZext(block, value);
+        }
+        return value;
+    }
+
 
     // 输出
     public static IO irOutput = new IO(Settings.llvmFile);

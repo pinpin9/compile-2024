@@ -8,7 +8,7 @@ import ir.types.ValueType;
 import java.util.ArrayList;
 
 public class BinaryInstruction extends Instruction {
-    private String insType; // 指令类型，如add |
+    private String insType; // 指令类型，如add | sub | srem | sdiv | mul
     public BinaryInstruction(String insType,ValueType valueType, String name, BasicBlock parent, Value op1, Value op2){
         super(valueType, name, parent, new ArrayList<>(){{
             add(op1);

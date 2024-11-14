@@ -19,7 +19,7 @@ public class Getelementptr extends Instruction {
             add(base);
             add(index);
         }});
-        this.baseType = ((PointerType)base.getValueType()).getPointingType();
+        this.baseType = ((PointerType)base.getValueType()).getPointingType(); // IntType | CharType
     }
 
     // base是一个指针类型，指向数组类型的数据，一般为一个alloca指令
@@ -31,7 +31,7 @@ public class Getelementptr extends Instruction {
             add(firstIndex);
             add(secondIndex);
         }});
-        this.baseType = ((PointerType)base.getValueType()).getPointingType();
+        this.baseType = ((PointerType)base.getValueType()).getPointingType(); // ArrayType
     }
 
     // %2 = getelementptr inbounds [3 x i32], [3 x i32]* %1, i32 0, i32 0

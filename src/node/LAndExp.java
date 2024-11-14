@@ -58,6 +58,9 @@ public class LAndExp extends Node{
             if(singleCmp){
                 // 如果只有单个表达式，比如if(a)，则需要先构建icmp表达式转为i1
                 // 如果有多个表达式，则本身就返回Icmp语句
+                if(valueUp.getValueType().isI1()||valueUp.getValueType().isChar()){
+                    valueUp = builder.buildZext(curBlock, valueUp);
+                }
                 valueUp = builder.buildIcmp(Icmp.Cond.NE, curBlock, valueUp, new ConstInt(0));
             }
             builder.buildBr(curBlock, valueUp, nextBlock, falseBlock);

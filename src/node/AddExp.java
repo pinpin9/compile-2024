@@ -73,23 +73,15 @@ public class AddExp extends Node{
             Value value1 = valueUp;
             for(int i = 1; i<mulExps.size(); i++){
                 mulExps.get(i).buildIr();
-                if(value1.getValueType().isI1() || value1.getValueType().isChar()){
-                    value1 = builder.buildZext(curBlock, value1);
-                }
                 Value value2 = valueUp;
-                if(value2.getValueType().isChar() || value2.getValueType().isI1()){
-                    value2 = builder.buildZext(curBlock, value2);
-                }
                 Token op = ops.get(i-1);
                 if(value1 instanceof Constant && value2 instanceof Constant){
                     value1 = getResult(value1, value2, op);
                 }else {
                     if(op.getType() == Token.TokenType.PLUS){
-                        Add add = builder.buildAdd(curBlock, value1, value2);
-                        value1 = add;
+                        value1 = builder.buildAdd(curBlock, value1, value2);
                     }else {
-                        Sub sub = builder.buildSub(curBlock, value1, value2);
-                        value1 = sub;
+                        value1 = builder.buildSub(curBlock, value1, value2);
                     }
                 }
             }

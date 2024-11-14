@@ -27,8 +27,7 @@ public class Ret extends Instruction {
         if(getOperands().isEmpty()){
             stringBuilder.append("void");
         }else {
-            Value value = getOperands().get(0);
-            stringBuilder.append(value.getValueType()).append(" ").append(value.getName());
+            stringBuilder.append(getOperands().get(0).getValueType()).append(" ").append(getOperands().get(0).getName());
         }
         return stringBuilder.toString();
     }

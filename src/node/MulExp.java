@@ -36,15 +36,9 @@ public class MulExp extends Node{
         int mul = 0;
         if(needCalExp){ // 需要计算出值
             for(int i = 0; i < unaryExps.size(); i++){
-                UnaryExp unaryExp = unaryExps.get(i);
-                unaryExp.buildIr();
+                unaryExps.get(i).buildIr();
                 Value value = valueUp;
-                int tempVal = 0;
-                if(value instanceof ConstInt){
-                    tempVal = ((ConstInt)value).getValue();
-                } else if (value instanceof ConstChar) {
-                    tempVal = ((ConstChar)value).getValue();
-                }
+                int tempVal = value instanceof ConstInt ? ((ConstInt)value).getValue() : ((ConstChar)value).getValue();
                 if(i > 0){
                     Token op = ops.get(i - 1);
                     if(op.getType() == Token.TokenType.MULT){
@@ -70,14 +64,11 @@ public class MulExp extends Node{
                     value1 = getResult(value1, value2, op);
                 }else {
                     if(op.getType() == Token.TokenType.MULT){
-                        Mul mult = builder.buildMul(curBlock, value1, value2);
-                        value1 = mult;
+                        value1 = builder.buildMul(curBlock, value1, value2);
                     } else if (op.getType() == Token.TokenType.DIV) {
-                        Sdiv sdiv = builder.buildSdiv(curBlock, value1,value2);
-                        value1 = sdiv;
+                        value1 = builder.buildSdiv(curBlock, value1,value2);
                     } else {
-                        Srem srem = builder.buildSrem(curBlock, value1, value2);
-                        value1 = srem;
+                        value1 = builder.buildSrem(curBlock, value1, value2);
                     }
                 }
             }
@@ -86,24 +77,16 @@ public class MulExp extends Node{
     }
 
     private Constant getResult(Value value1, Value value2, Token op){
-        int val1, val2;
-        if(value1 instanceof ConstInt){
-            val1=((ConstInt) value1).getValue();
-        }else{
-            val1 = ((ConstChar)value1).getValue();
-        }
-        if(value2 instanceof ConstInt){
-            val2=((ConstInt) value2).getValue();
-        }else{
-            val2 = ((ConstChar)value2).getValue();
-        }
+        int val1 = value1 instanceof ConstInt ? ((ConstInt) value1).getValue() : ((ConstChar)value1).getValue();
+        int val2 = value2 instanceof ConstInt ? ((ConstInt) value2).getValue() : ((ConstChar)value2).getValue();;
         if(op.getType() == Token.TokenType.MULT){
             return new ConstInt(val1*val2);
         } else if (op.getType() == Token.TokenType.DIV) {
             return new ConstInt(val1/val2);
-        } else {
+        } else if (op.getType() == Token.TokenType.MOD){
             return new ConstInt(val1%val2);
         }
+        return null;
     }
 
     public void traverse() {

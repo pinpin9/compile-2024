@@ -36,12 +36,6 @@ public class RelExp extends Node{
             singleCmp = false;
             addExps.get(i).buildIr();
             Value rValue = valueUp;
-            if(lValue.getValueType().isI1() || lValue.getValueType().isChar()){
-                lValue = builder.buildZext(curBlock, lValue);
-            }
-            if(rValue.getValueType().isI1() || rValue.getValueType().isChar()){
-                rValue = builder.buildZext(curBlock, rValue);
-            }
             switch (ops.get(i-1).getType()){
                 case LSS -> lValue = builder.buildIcmp(Icmp.Cond.SLT, curBlock, lValue, rValue); // <
                 case LEQ -> lValue = builder.buildIcmp(Icmp.Cond.SLE, curBlock, lValue, rValue); // <=

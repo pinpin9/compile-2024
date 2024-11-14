@@ -94,12 +94,8 @@ public class UnaryExp extends Node{
                         Sub sub = builder.buildSub(curBlock, new ConstInt(0), valueUp);
                         valueUp = sub;
                     }
-                } else if(unaryOp.getOp().getType() == Token.TokenType.NOT){ //
-                    if(value.getValueType().isChar() || value.getValueType().isI1()){
-                        value = builder.buildZext(curBlock, value);
-                    }
+                } else if(unaryOp.getOp().getType() == Token.TokenType.NOT){ // !
                     valueUp = builder.buildIcmp(Icmp.Cond.EQ, curBlock, ConstInt.ZERO, value);
-                    valueUp = builder.buildZext(curBlock, valueUp);
                 }
             } else if (primaryExp != null) {
                 primaryExp.buildIr();

@@ -65,6 +65,9 @@ public class VarDef extends Node{
                     initVal.buildIr();
                     needCalExp = false;
                     init = (Constant) valueUp;
+                    if(bType.getbType().getType() == Token.TokenType.CHARTK){
+                        init = new ConstChar(((ConstInt)init).getValue());
+                    }
                 }
                 builder.buildGlobalVariable(name, false, init);
             } else { // 局部变量
