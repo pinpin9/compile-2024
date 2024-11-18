@@ -30,6 +30,10 @@ public class IrBuilder {
     private Module module = Module.getInstance();
     IrSymbolStack stack = IrSymbolStack.getInstance();
 
+    public Module getModule(){
+        return module;
+    }
+
     public HashMap<String, GlobalVariable> constStrings = new HashMap<>();
 
     // 命名计数器
@@ -284,7 +288,7 @@ public class IrBuilder {
     public static IO irOutput = new IO(Settings.llvmFile);
 
     /**
-     * 方法描述：
+     * 方法描述：输出中间代码到目标文件中
      */
     public void print(){
         irOutput.output(module.toString());

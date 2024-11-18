@@ -1,5 +1,6 @@
 package ir;
 
+import backend.MipsBuilder;
 import ir.types.ValueType;
 
 import java.util.ArrayList;
@@ -53,6 +54,10 @@ public class Function extends User{
 
     public void setIrSymbolTable(IrSymbolTable irSymbolTable) {
         this.irSymbolTable = irSymbolTable;
+    }
+
+    public boolean isLibFunc() {
+        return isLibFunc;
     }
     public Function(Boolean isLibFunc,String name, ValueType retType, List<ValueType> argsType){
         super(retType, "@"+name, Module.getInstance());
@@ -109,5 +114,11 @@ public class Function extends User{
             stringBuilder.append("}");
         }
         return stringBuilder.toString();
+    }
+
+    //==========目标代码生成==========
+    MipsBuilder mipsBuilder = MipsBuilder.getInstance();
+    public void buildMips(){
+
     }
 }

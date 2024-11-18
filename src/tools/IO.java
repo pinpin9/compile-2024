@@ -44,6 +44,7 @@ public class IO {
         writer.flush();
     }
 
+
     public void output(String s){
         writer.println(s);
         writer.flush();

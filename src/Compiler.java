@@ -1,10 +1,12 @@
 import java.io.IOException;
 
+import backend.MipsBuilder;
 import frontend.LexicalAnalyze;
 import frontend.ParserAnalyze;
 import error.ErrorHandler;
 import frontend.SemanticAnalyze;
 import ir.IrBuilder;
+import settings.Settings;
 import tools.IO;
 
 public class Compiler {
@@ -33,5 +35,12 @@ public class Compiler {
         //============中间代码=============
         IrBuilder.getInstance().buildIr(ParserAnalyze.getInstance().getResult());
         IrBuilder.getInstance().print();
+
+        //============目标代码=============
+        if(Settings.generateMips){ // 是否生成目标代码
+            MipsBuilder.getInstance().buildMips(IrBuilder.getInstance().getModule());
+            MipsBuilder.getInstance().print();
+        }
+
     }
 }

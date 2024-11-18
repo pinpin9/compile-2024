@@ -1,8 +1,12 @@
 package ir;
 
+import backend.MipsBuilder;
+import backend.MipsGlobalVariable;
+import ir.types.ArrayType;
+import ir.types.IntType;
 import ir.types.PointerType;
 import ir.types.ValueType;
-import ir.types.constants.Constant;
+import ir.types.constants.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +32,50 @@ public class GlobalVariable extends User{
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(getName());// @a
+        stringBuilder.append(getName()); // @a
         stringBuilder.append(" = dso_local ");
         stringBuilder.append((isConst) ? "constant " : "global ");
         stringBuilder.append(((PointerType)getValueType()).getPointingType());
         stringBuilder.append(" ");
         stringBuilder.append(getOperands().get(0));
         return stringBuilder.toString();
+    }
+
+
+
+    //==========目标代码生成==========
+    MipsBuilder mipsBuilder = MipsBuilder.getInstance();
+    public void buildMips(){
+        // 只需要生成global
+        if(initValue instanceof ConstStr){ // 字符串
+            mipsBuilder.buildGlobalVariable(getName(), ((ConstStr)initValue).getString());
+        } else if (initValue instanceof ZeroInitializer) { // 没有初始化
+            mipsBuilder.buildGlobalVariable(getName(), initValue.getValueType().getSize());
+        } else if(initValue instanceof ConstInt){
+
+            mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.intType, new ArrayList<>(){{
+                add(((ConstInt) initValue).getValue());
+            }});
+        } else if (initValue instanceof ConstChar) {
+            mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.charType, new ArrayList<>(){{
+                add(((ConstChar)initValue).getValue());
+            }});
+        } else if (initValue instanceof ConstArray){
+            List<Constant> values = ((ConstArray) initValue).getValues(); // ConstArray中的值
+            int initLen = ((ConstArray)initValue).getInitLen(); // 初始化参数的个数
+            List<Integer> initArray = new ArrayList<>(); // 参数值列表
+            if(((ArrayType)initValue.getValueType()).getValueType() instanceof IntType){
+                for(int i = 0;i<initLen; i++){
+                    initArray.add(((ConstInt)values.get(i)).getValue());
+                }
+                mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.intType, initArray);
+            } else {
+                for(int i = 0; i < initLen; i++){
+                    initArray.add(((ConstChar)values.get(i)).getValue());
+                }
+                mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.charType, initArray);
+            }
+        }
+
     }
 }

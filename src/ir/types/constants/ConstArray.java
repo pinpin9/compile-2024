@@ -22,6 +22,15 @@ public class ConstArray extends Constant{
         return values.get(i);
     }
 
+    private int initLen = 0; // 用来保存初始化值的个数
+    public void setInitLen(int len){
+        initLen = len;
+    }
+
+    public int getInitLen() {
+        return initLen;
+    }
+
     // @a = dso_local global [10 x i32] [i32 1, i32 2, i32 3, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0, i32 0]
     @Override
     public String toString(){

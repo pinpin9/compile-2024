@@ -55,7 +55,6 @@ public class StrTool {
                 i++;
             }
         }
-        System.out.println(cnt);
         return cnt;
     }
 }

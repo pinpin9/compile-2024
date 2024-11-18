@@ -123,7 +123,8 @@ public class VarDef extends Node{
                         }
                     }
                     constArray = new ConstArray(constants);
-                } else { // 没有初始化，利用zeroInitializer进行出事啊
+                    ((ConstArray)constArray).setInitLen(valueUpList.size()); // 设置初始化值的个数
+                } else { // 没有初始化，利用zeroInitializer进行初始化
                     constArray = new ZeroInitializer(new ArrayType(getValueType(), dim));
                 }
                 builder.buildGlobalVariable(name,false, constArray);

@@ -373,7 +373,7 @@ public class Stmt extends Node{
         // 构造字符串常量StringConst
         List<String> stringList = StrTool.getStrings(stringConst.getValue());
         List<Value> outputList = new ArrayList<>();
-        for(int i = 0;i<expList.size();i++){
+        for(int i = 0;i < expList.size();i++){
             expList.get(i).buildIr();
             outputList.add(valueUp);
         }

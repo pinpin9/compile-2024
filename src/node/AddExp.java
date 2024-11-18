@@ -80,7 +80,7 @@ public class AddExp extends Node{
                 }else {
                     if(op.getType() == Token.TokenType.PLUS){
                         value1 = builder.buildAdd(curBlock, value1, value2);
-                    }else {
+                    } else {
                         value1 = builder.buildSub(curBlock, value1, value2);
                     }
                 }

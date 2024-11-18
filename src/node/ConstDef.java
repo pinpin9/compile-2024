@@ -82,7 +82,7 @@ public class ConstDef extends Node{
                         constants.add((Constant) valueUpList.get(i));
                     }
                 }else{
-                    if(isChar()){
+                    if(isChar()) {
                         constants.add(new ConstChar(0));
                     }else{
                         constants.add(new ConstInt(0));
