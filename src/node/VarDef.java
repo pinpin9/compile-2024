@@ -1,10 +1,9 @@
 package node;
 
 import error.SemanticError;
-import ir.Value;
+import ir.values.Value;
 import ir.instructions.memory.Alloca;
 import ir.instructions.memory.Getelementptr;
-import ir.instructions.memory.Store;
 import ir.types.*;
 import ir.types.constants.*;
 import token.Token;

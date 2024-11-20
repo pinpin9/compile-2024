@@ -1,4 +1,4 @@
-package ir;
+package ir.values;
 
 import ir.types.ValueType;
 

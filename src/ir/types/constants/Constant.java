@@ -1,7 +1,7 @@
 package ir.types.constants;
 
-import ir.User;
-import ir.Value;
+import ir.values.User;
+import ir.values.Value;
 import ir.types.ValueType;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package ir;
+package ir.values;
 
 import ir.instructions.Instruction;
 import ir.types.LabelType;
@@ -17,7 +17,7 @@ import java.util.List;
  * 每个 BasicBlock 由一系列 Instruction 组成，
  * @date 2024/11/01
  */
-public class BasicBlock extends Value{
+public class BasicBlock extends Value {
     private LinkedList<Instruction> instructions = new LinkedList<>();
     public BasicBlock(String name,Value parent){
         super(new LabelType(), name, parent);

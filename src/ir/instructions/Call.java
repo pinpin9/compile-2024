@@ -1,8 +1,8 @@
 package ir.instructions;
 
-import ir.BasicBlock;
-import ir.Function;
-import ir.Value;
+import ir.values.BasicBlock;
+import ir.values.Function;
+import ir.values.Value;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,13 +1,10 @@
 package node;
 
 import error.SemanticError;
-import ir.BasicBlock;
-import ir.Function;
+import ir.values.BasicBlock;
+import ir.values.Function;
 import ir.IrSymbolTable;
 import ir.types.IntType;
-import ir.types.ValueType;
-import ir.types.VoidType;
-import symbol.Symbol;
 import token.Token;
 
 import java.util.ArrayList;

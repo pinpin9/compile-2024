@@ -1,6 +1,6 @@
 package ir;
 
-import symbol.SymbolTable;
+import ir.values.Value;
 
 import java.util.Stack;
 

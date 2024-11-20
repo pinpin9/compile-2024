@@ -1,8 +1,10 @@
 package backend;
 
-import ir.BasicBlock;
-import ir.Function;
-import ir.Module;
+import backend.values.MipsFunction;
+import backend.values.MipsGlobalVariable;
+import backend.values.MipsModule;
+import ir.values.Function;
+import ir.values.Module;
 import settings.Settings;
 import tools.IO;
 

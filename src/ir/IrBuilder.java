@@ -16,6 +16,8 @@ import ir.types.VoidType;
 import ir.types.constants.ConstArray;
 import ir.types.constants.ConstStr;
 import ir.types.constants.Constant;
+import ir.values.*;
+import ir.values.Module;
 import node.CompUnit;
 import settings.Settings;
 import tools.IO;
@@ -27,7 +29,7 @@ public class IrBuilder {
     public static IrBuilder getInstance(){
         return irBuilder;
     }
-    private Module module = Module.getInstance();
+    private ir.values.Module module = ir.values.Module.getInstance();
     IrSymbolStack stack = IrSymbolStack.getInstance();
 
     public Module getModule(){
@@ -58,6 +60,9 @@ public class IrBuilder {
     private int strCnt = 0;
     private String getStrName(){
         return ".str"+strCnt++;
+    }
+    private String getPhiName(){
+        return "%p"+nameCnt++;
     }
     /**
      * 方法描述： 构建函数模块
@@ -267,11 +272,11 @@ public class IrBuilder {
         return icmp;
     }
 
-    public void buildBr(BasicBlock parent, BasicBlock dest){ // 无条件条件
+    public void buildBr(BasicBlock parent, BasicBlock dest){ // 无条件跳转
         Br br = new Br(parent, dest);
         parent.addTailInstruction(br);
     }
-    public void buildBr(BasicBlock parent, Value cond, BasicBlock ifTrue, BasicBlock ifFalse){
+    public void buildBr(BasicBlock parent, Value cond, BasicBlock ifTrue, BasicBlock ifFalse){ // 有条件跳转
         Br br = new Br(parent, cond, ifTrue, ifFalse);
         parent.addTailInstruction(br);
     }
@@ -281,6 +286,10 @@ public class IrBuilder {
             value = buildZext(block, value);
         }
         return value;
+    }
+
+    private void buildPhi(){
+
     }
 
 

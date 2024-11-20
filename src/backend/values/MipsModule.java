@@ -1,6 +1,4 @@
-package backend;
-
-import ir.GlobalVariable;
+package backend.values;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
 package backend.instructions;
 
-public class MipsStore {
+public class MipsStore extends MipsInstruction{
 }

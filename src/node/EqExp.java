@@ -1,8 +1,6 @@
 package node;
 
-import frontend.ParserAnalyze;
-import ir.BasicBlock;
-import ir.Value;
+import ir.values.Value;
 import ir.instructions.binary.Icmp;
 import token.Token;
 

@@ -1,8 +1,6 @@
 package node;
 
-import ir.Value;
-import ir.instructions.binary.Add;
-import ir.instructions.binary.Sub;
+import ir.values.Value;
 import ir.types.constants.ConstChar;
 import ir.types.constants.ConstInt;
 import ir.types.constants.Constant;

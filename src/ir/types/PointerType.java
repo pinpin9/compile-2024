@@ -1,8 +1,6 @@
 package ir.types;
 
 
-import ir.Value;
-
 /**
  * @author zlp
  * @Discription 指针类型

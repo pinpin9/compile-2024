@@ -1,7 +1,6 @@
 package ir.instructions.memory;
 
-import ir.BasicBlock;
-import ir.Value;
+import ir.values.BasicBlock;
 import ir.instructions.Instruction;
 import ir.types.PointerType;
 import ir.types.ValueType;

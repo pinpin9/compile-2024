@@ -1,5 +1,5 @@
 package backend.instructions;
 
 // j
-public class MipsBranch {
+public class MipsBranch extends MipsInstruction{
 }

@@ -1,8 +1,8 @@
 package node;
 
 import error.SemanticError;
-import ir.Function;
-import ir.Value;
+import ir.values.Function;
+import ir.values.Value;
 import ir.instructions.Call;
 import ir.instructions.binary.Icmp;
 import ir.instructions.binary.Sub;

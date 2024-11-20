@@ -1,6 +1,6 @@
 package node;
 
-import ir.BasicBlock;
+import ir.values.BasicBlock;
 import ir.instructions.binary.Icmp;
 import ir.types.constants.ConstInt;
 import token.Token;

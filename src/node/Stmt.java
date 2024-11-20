@@ -4,15 +4,17 @@ import error.SemanticError;
 import ir.*;
 import ir.instructions.Call;
 import ir.instructions.Trunc;
-import ir.instructions.Zext;
 import ir.instructions.memory.Getelementptr;
 import ir.types.*;
 import ir.types.constants.ConstInt;
+import ir.values.BasicBlock;
+import ir.values.Function;
+import ir.values.GlobalVariable;
+import ir.values.Value;
 import token.Token;
 import tools.StrTool;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 /*

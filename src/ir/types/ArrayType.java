@@ -1,8 +1,6 @@
 package ir.types;
 
 
-import ir.Value;
-
 public class ArrayType extends ValueType {
     // int | char
     private ValueType valueType;

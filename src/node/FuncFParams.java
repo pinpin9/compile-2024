@@ -1,8 +1,5 @@
 package node;
 
-import ir.Value;
-import ir.instructions.memory.Alloca;
-import ir.instructions.memory.Store;
 import symbol.Symbol;
 import token.Token;
 

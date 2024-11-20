@@ -1,10 +1,10 @@
 package node;
 
 import error.SemanticError;
-import ir.BasicBlock;
-import ir.Function;
+import ir.values.BasicBlock;
+import ir.values.Function;
 import ir.IrSymbolTable;
-import ir.Value;
+import ir.values.Value;
 import ir.instructions.Instruction;
 import ir.instructions.memory.Alloca;
 import ir.instructions.memory.Store;

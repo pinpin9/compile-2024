@@ -1,16 +1,14 @@
-package ir;
+package ir.values;
 
 import backend.Mc;
-import backend.MipsBasicBlock;
+import backend.values.MipsBasicBlock;
 import backend.MipsBuilder;
-import backend.MipsFunction;
-import ir.types.ValueType;
 import ir.types.VoidType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Module extends Value{
+public class Module extends Value {
     // 全局只有一个Module，所以为单例模式
     private static Module module = new Module();
 
@@ -81,7 +79,9 @@ public class Module extends Value{
             // 存储前继Mips基本块的信息
             for(BasicBlock irBlock:basicBlockList){
                 MipsBasicBlock mipsBasicBlock = Mc.getMappedBlock(irBlock);
-
+                for(BasicBlock preBlock : irBlock.getPreBlocks()){
+                    mipsBasicBlock.addPreBlock(Mc.getMappedBlock(preBlock));
+                }
             }
         }
     }

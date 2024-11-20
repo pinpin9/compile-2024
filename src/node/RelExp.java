@@ -1,6 +1,6 @@
 package node;
 
-import ir.Value;
+import ir.values.Value;
 import ir.instructions.binary.Icmp;
 import token.Token;
 

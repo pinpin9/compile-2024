@@ -1,17 +1,16 @@
-package ir;
+package ir.values;
 
 import backend.MipsBuilder;
-import backend.MipsGlobalVariable;
+import backend.values.MipsGlobalVariable;
 import ir.types.ArrayType;
 import ir.types.IntType;
 import ir.types.PointerType;
-import ir.types.ValueType;
 import ir.types.constants.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GlobalVariable extends User{
+public class GlobalVariable extends User {
     // 是否为常数
     private boolean isConst;
     // 初始化

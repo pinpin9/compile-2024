@@ -1,8 +1,7 @@
 package node;
 
 import error.SemanticError;
-import ir.GlobalVariable;
-import ir.Value;
+import ir.values.Value;
 import ir.instructions.memory.Alloca;
 import ir.types.ArrayType;
 import ir.types.CharType;
@@ -12,12 +11,10 @@ import ir.types.constants.ConstArray;
 import ir.types.constants.ConstChar;
 import ir.types.constants.ConstInt;
 import ir.types.constants.Constant;
-import symbol.Symbol;
 import token.Token;
 import symbol.Symbol.SymbolType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 // 常量定义
 // 一维数组或常数

@@ -98,7 +98,7 @@ public class ParserAnalyze {
     private CompUnit getCompUint(){
         List<Decl> declList = new ArrayList<>();
         List<FuncDef> funcDefList = new ArrayList<>();
-        MainFuncDef mainFuncDef = null;
+        MainFuncDef mainFuncDef;
         // 匹配Decl
         while(!preMatch(2,TokenType.LPARENT)){
             Decl decl = getDecl();

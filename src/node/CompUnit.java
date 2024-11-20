@@ -1,13 +1,11 @@
 package node;
 
-import ir.Function;
-import ir.IrSymbolStack;
+import ir.values.Function;
 import ir.types.CharType;
 import ir.types.IntType;
 import ir.types.PointerType;
 import ir.types.VoidType;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

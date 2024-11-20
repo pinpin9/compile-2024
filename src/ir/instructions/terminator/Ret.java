@@ -1,7 +1,7 @@
 package ir.instructions.terminator;
 
-import ir.BasicBlock;
-import ir.Value;
+import ir.values.BasicBlock;
+import ir.values.Value;
 import ir.instructions.Instruction;
 import ir.types.VoidType;
 

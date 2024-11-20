@@ -1,4 +1,4 @@
-package backend;
+package backend.values;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class MipsGlobalVariable {
                     }
                 }
             } else{
-                stringBuilder.append(".space "+size);
+                stringBuilder.append(".space " + size);
             }
         }
         stringBuilder.append("\n");

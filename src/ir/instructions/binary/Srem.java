@@ -1,7 +1,7 @@
 package ir.instructions.binary;
 
-import ir.BasicBlock;
-import ir.Value;
+import ir.values.BasicBlock;
+import ir.values.Value;
 import ir.types.ValueType;
 
 public class Srem extends BinaryInstruction {

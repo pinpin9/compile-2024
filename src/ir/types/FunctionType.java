@@ -1,7 +1,5 @@
 package ir.types;
 
-import ir.Value;
-
 import java.util.ArrayList;
 import java.util.List;
 

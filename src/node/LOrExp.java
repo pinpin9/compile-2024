@@ -1,10 +1,9 @@
 package node;
 
-import ir.BasicBlock;
+import ir.values.BasicBlock;
 import token.Token;
 
 import java.util.List;
-import java.util.Locale;
 
 // LOrExp → LAndExp | LOrExp '||' LAndExp
 public class LOrExp extends Node{

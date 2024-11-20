@@ -1,6 +1,10 @@
-package ir;
+package ir.values;
 
+import backend.Mc;
 import backend.MipsBuilder;
+import backend.values.MipsBasicBlock;
+import backend.values.MipsFunction;
+import ir.IrSymbolTable;
 import ir.types.ValueType;
 
 import java.util.ArrayList;
@@ -12,7 +16,7 @@ import java.util.List;
  * @Discriptionv 函数结点：具有返回值，参数列表以及下属基本块属性
  * @date 2024/11/01
  */
-public class Function extends User{
+public class Function extends User {
     // 是否链接函数
     private boolean isLibFunc;
     // 形参列表
@@ -119,6 +123,16 @@ public class Function extends User{
     //==========目标代码生成==========
     MipsBuilder mipsBuilder = MipsBuilder.getInstance();
     public void buildMips(){
-
+        // 只有非链接函数才需要构建
+        if(!isLibFunc){
+            Mc.curIrFunction = this;
+            MipsFunction mipsFunction = Mc.getMappedFunction(this); // 对应的mips函数块
+            MipsBasicBlock firstBlock = Mc.getMappedBlock(getFirstBlock()); // 第一个基本块
+            for(BasicBlock block:basicBlockList){
+                block.buildMips();
+            }
+            // 进行序列化
+            mipsFunction.blockSerialize(firstBlock);
+        }
     }
 }

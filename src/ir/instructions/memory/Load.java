@@ -1,11 +1,10 @@
 package ir.instructions.memory;
 
-import ir.BasicBlock;
-import ir.Value;
+import ir.values.BasicBlock;
+import ir.values.Value;
 import ir.instructions.Instruction;
 import ir.types.PointerType;
 import ir.types.ValueType;
-import ir.types.VoidType;
 
 import java.util.ArrayList;
 

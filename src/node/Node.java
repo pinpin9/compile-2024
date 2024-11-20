@@ -3,6 +3,9 @@ package node;
 import frontend.ParserAnalyze;
 import ir.*;
 import ir.types.ValueType;
+import ir.values.BasicBlock;
+import ir.values.Function;
+import ir.values.Value;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package node;
 
-import ir.BasicBlock;
+import ir.values.BasicBlock;
 
 // Cond → LOrExp
 public class Cond extends Node{

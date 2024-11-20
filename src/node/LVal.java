@@ -1,13 +1,12 @@
 package node;
 
 import error.SemanticError;
-import ir.GlobalVariable;
-import ir.Value;
+import ir.values.GlobalVariable;
+import ir.values.Value;
 import ir.instructions.memory.Getelementptr;
 import ir.instructions.memory.Load;
 import ir.types.*;
 import ir.types.constants.ConstArray;
-import ir.types.constants.ConstChar;
 import ir.types.constants.ConstInt;
 import ir.types.constants.Constant;
 import symbol.Symbol;

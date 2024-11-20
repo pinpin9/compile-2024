@@ -1,4 +1,4 @@
 package backend.instructions;
 
-public class MipsBinary {
+public class MipsBinary extends MipsInstruction{
 }

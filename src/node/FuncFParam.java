@@ -1,7 +1,6 @@
 package node;
 
 import error.SemanticError;
-import ir.Value;
 import ir.types.CharType;
 import ir.types.IntType;
 import ir.types.PointerType;
