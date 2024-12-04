@@ -130,12 +130,15 @@ public class VarDef extends Node{
             } else { // 局部数组变量
                 Alloca alloca = builder.buildAlloca(getValueType(dim), curBlock);
                 stack.addSymbol(name, alloca);
-                Getelementptr base = builder.buildGetElementPtr(curBlock, alloca, new ConstInt(0), new ConstInt(0));
+                Getelementptr base = null;
                 if(valueUpList != null){
                     valueUpList.clear();
                 }
                 if(initVal!=null){
                     initVal.buildIr();
+                }
+                if(valueUpList.size()>0){
+                    base = builder.buildGetElementPtr(curBlock, alloca, new ConstInt(0), new ConstInt(0));
                 }
                 for(int i = 0; i < valueUpList.size(); i++){
                     Value addr = builder.buildGetElementPtr(curBlock, base, new ConstInt(i));

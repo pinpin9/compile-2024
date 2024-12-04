@@ -68,7 +68,7 @@ public class Function extends User {
         this.isLibFunc = isLibFunc;
         this.retType = retType;
         for(int i = 0;i<argsType.size();i++){
-            params.add(new Value(argsType.get(i), "%"+i, this));
+            params.add(new Value(argsType.get(i), "%"+i, this, i));
         }
     }
     // 添加基本块

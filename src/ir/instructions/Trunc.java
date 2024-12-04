@@ -1,5 +1,10 @@
 package ir.instructions;
 
+import backend.Mc;
+import backend.MipsBuilder;
+import backend.instructions.MipsBinary;
+import backend.operands.MipsImme;
+import backend.operands.MipsOperand;
 import ir.values.BasicBlock;
 import ir.values.Value;
 import ir.types.IntType;
@@ -26,5 +31,16 @@ public class Trunc extends Instruction{
         stringBuilder.append(getName()).append(" = trunc i32 ");
         stringBuilder.append(getOperands().get(0).getName()).append(" to i8");
         return stringBuilder.toString();
+    }
+
+    @Override
+    public void buildMips() {
+        Value value = getOperands().get(0);
+        MipsBuilder builder = MipsBuilder.getInstance();
+        MipsOperand dst = builder.buildOperand(this, false, Mc.curIrFunction, getParent());
+        MipsOperand src = builder.buildOperand(value, false, Mc.curIrFunction, getParent());
+        MipsOperand num = new MipsImme(0xff);
+        // i32 -> i8
+        builder.buildBinary(MipsBinary.BinaryType.AND, dst, src, num, getParent());
     }
 }

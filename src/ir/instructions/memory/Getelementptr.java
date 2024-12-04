@@ -1,5 +1,13 @@
 package ir.instructions.memory;
 
+import backend.Mc;
+import backend.MipsBuilder;
+import backend.instructions.MipsBinary;
+import backend.operands.MipsOperand;
+import backend.operands.MipsPhyReg;
+import ir.types.constants.ConstChar;
+import ir.types.constants.ConstInt;
+import ir.types.constants.Constant;
 import ir.values.BasicBlock;
 import ir.values.Value;
 import ir.instructions.Instruction;
@@ -50,5 +58,48 @@ public class Getelementptr extends Instruction {
             }
         }
         return stringBuilder.toString();
+    }
+
+    MipsBuilder builder = MipsBuilder.getInstance();
+    @Override
+    public void buildMips() {
+        Value irBase = getOperands().get(0);
+        Value irOffset1 = getOperands().get(1);
+
+        MipsOperand base = builder.buildOperand(irBase, false, Mc.curIrFunction, getParent());
+        MipsOperand dst = builder.buildOperand(this, false, Mc.curIrFunction, getParent());
+        if(getOperands().size() == 2){ // 只有一个偏移
+            handleCal(dst, MipsPhyReg.AT, base, irOffset1, baseType);
+        } else { // 有两个偏移
+            // 因为是一维数组，所以第一个偏移量一定是0
+            MipsOperand offset1 = builder.buildImmeOperand(0, true, Mc.curIrFunction, getParent());
+            builder.buildBinary(MipsBinary.BinaryType.ADDU, dst, base, offset1, getParent());
+            ValueType valueType = ((ArrayType)baseType).getValueType();
+            handleCal(dst, MipsPhyReg.AT, dst, getOperands().get(2), valueType);
+        }
+    }
+
+    private void handleCal(MipsOperand dst, MipsOperand mid, MipsOperand base, Value irOffset, ValueType valueType){
+        int valueSize = valueType.getSize();
+        if(valueSize == 1){
+            valueSize = 4;
+        }
+
+        if(irOffset instanceof Constant){
+            int dim;
+            if(irOffset instanceof ConstInt){
+                dim = ((ConstInt) irOffset).getValue();
+            } else{
+                dim = ((ConstChar) irOffset).getValue();
+            }
+            int totalOffset = valueSize*dim;
+            MipsOperand totalOffsetOp = builder.buildImmeOperand(totalOffset, true, Mc.curIrFunction, getParent());
+            builder.buildBinary(MipsBinary.BinaryType.ADDU, dst, base, totalOffsetOp, getParent());
+        } else {
+            MipsOperand mul1 = builder.buildOperand(irOffset, false, Mc.curIrFunction, getParent());
+            MipsOperand mul2 = builder.buildImmeOperand(valueSize, true, Mc.curIrFunction, getParent());
+            builder.buildBinary(MipsBinary.BinaryType.MUL, mid, mul1, mul2, getParent());
+            builder.buildBinary(MipsBinary.BinaryType.ADDU, dst, base, mid, getParent());
+        }
     }
 }

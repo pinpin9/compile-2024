@@ -19,4 +19,7 @@ public class Instruction extends User {
     public BasicBlock getParent() {
         return (BasicBlock) super.getParent();
     }
+    public void buildMips(){
+
+    }
 }

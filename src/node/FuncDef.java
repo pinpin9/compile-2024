@@ -114,7 +114,7 @@ public class FuncDef extends Node{
         for(int i=0;i<fParams.size();i++){
             Value param = params.get(i);
             Alloca alloca = builder.buildAlloca(param.getValueType(), curBlock);
-            Store store = builder.buildStore(curBlock, param, alloca);
+            builder.buildStore(curBlock, param, alloca);
             stack.addSymbol(fParams.get(i).getIdent().getValue(), alloca);
         }
     }

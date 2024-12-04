@@ -57,7 +57,7 @@ public class BasicBlock extends Value {
     /*==============IR analyze============*/
     /**
      * 前驱和后继基本块
-     * 因为不考虑顺序，所以采取set形式
+     * 因为不考虑顺序，所以采取set集合形式
      */
     private HashSet<BasicBlock> preBlocks = new HashSet<>(); // 前驱基本块
     private HashSet<BasicBlock> sucBlocks = new HashSet<>(); // 后继基本块

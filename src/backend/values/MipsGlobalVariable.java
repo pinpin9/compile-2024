@@ -49,7 +49,7 @@ public class MipsGlobalVariable {
     }
 
     public MipsGlobalVariable(String name, String content){ // 字符串
-        this.name = name.substring(2); // 去掉@.
+        this.name = name.substring(1); // 去掉@.
         this.content = content;
         isStr = true;
         hasInit = false;

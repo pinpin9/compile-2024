@@ -14,10 +14,10 @@ public class GlobalVariable extends User {
     // 是否为常数
     private boolean isConst;
     // 初始化
-    private Constant initValue = null;
+    private Constant initValue;
     // 定义全局变量，常量一定有初始化值，变量如果没有初始化值，则初始化为0
     public GlobalVariable(String name, boolean isConst, Constant initValue){
-        super(new PointerType(initValue.getValueType()),"@"+name,Module.getInstance(),new ArrayList<Value>(){{
+        super(new PointerType(initValue.getValueType()),"@"+name,Module.getInstance(), new ArrayList<>() {{
             add(initValue);
         }});
         this.isConst = isConst;
@@ -56,12 +56,15 @@ public class GlobalVariable extends User {
                 add(((ConstInt) initValue).getValue());
             }});
         } else if (initValue instanceof ConstChar) {
-            mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.charType, new ArrayList<>(){{
+//            mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.charType, new ArrayList<>(){{
+//                add(((ConstChar)initValue).getValue());
+//            }});
+            mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.intType, new ArrayList<>(){{
                 add(((ConstChar)initValue).getValue());
             }});
         } else if (initValue instanceof ConstArray){
             List<Constant> values = ((ConstArray) initValue).getValues(); // ConstArray中的值
-            int initLen = ((ConstArray)initValue).getInitLen(); // 初始化参数的个数
+            int initLen = values.size(); // 初始化参数的个数
             List<Integer> initArray = new ArrayList<>(); // 参数值列表
             if(((ArrayType)initValue.getValueType()).getValueType() instanceof IntType){
                 for(int i = 0;i<initLen; i++){
@@ -72,7 +75,8 @@ public class GlobalVariable extends User {
                 for(int i = 0; i < initLen; i++){
                     initArray.add(((ConstChar)values.get(i)).getValue());
                 }
-                mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.charType, initArray);
+                // TODO : 暂时都当做4字节来做
+                mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.intType, initArray);
             }
         }
 

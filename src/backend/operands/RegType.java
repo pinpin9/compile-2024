@@ -2,6 +2,8 @@ package backend.operands;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Mips共有32个寄存器
@@ -91,20 +93,20 @@ public enum RegType {
      * 进行寄存器分配时, 能够分配出去的寄存器
      * 即 zero, at, sp 以外的寄存器
      */
-    public static HashSet<RegType> regsCanAlloc = new HashSet<>();
+    public static Set<RegType> regsCanAlloc = new LinkedHashSet<>();
 
     // 获取寄存器类型
     public static RegType getRegType(String name){
         if(name2Type.containsKey(name)){
             return name2Type.get(name);
         }
-        return null;
+        return RegType.values()[0];
     }
     public static RegType getRegType(int index){
         if(index >= 0 && index < 32){
             return RegType.values()[index];
         }
-        return null;
+        return RegType.values()[0];
     }
 
     static { // 构建 Map 和 Set

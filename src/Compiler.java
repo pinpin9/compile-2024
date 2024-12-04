@@ -1,6 +1,8 @@
 import java.io.IOException;
 
 import backend.MipsBuilder;
+import backend.opt.RegBuilder;
+import backend.values.MipsModule;
 import frontend.LexicalAnalyze;
 import frontend.ParserAnalyze;
 import error.ErrorHandler;
@@ -39,6 +41,8 @@ public class Compiler {
         //============目标代码=============
         if(Settings.generateMips){ // 是否生成目标代码
             MipsBuilder.getInstance().buildMips(IrBuilder.getInstance().getModule());
+            // 寄存器分配
+            RegBuilder.getInstance().process(MipsModule.getModule());
             MipsBuilder.getInstance().print();
         }
 

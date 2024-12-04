@@ -1,5 +1,10 @@
 package ir.instructions.terminator;
 
+import backend.Mc;
+import backend.MipsBuilder;
+import backend.operands.MipsOperand;
+import backend.operands.MipsPhyReg;
+import backend.values.MipsFunction;
 import ir.values.BasicBlock;
 import ir.values.Value;
 import ir.instructions.Instruction;
@@ -30,5 +35,19 @@ public class Ret extends Instruction {
             stringBuilder.append(getOperands().get(0).getValueType()).append(" ").append(getOperands().get(0).getName());
         }
         return stringBuilder.toString();
+    }
+
+    @Override
+    public void buildMips() {
+        MipsFunction mipsFunction = Mc.getMappedFunction(Mc.curIrFunction);
+        MipsBuilder builder = MipsBuilder.getInstance();
+
+        if(!getOperands().isEmpty()){
+            Value value = getOperands().get(0);
+            MipsOperand retValue = builder.buildOperand(value, true, Mc.curIrFunction, getParent());
+            builder.buildMove(MipsPhyReg.V0, retValue, getParent());
+
+        }
+        builder.buildRet(mipsFunction, getParent());
     }
 }

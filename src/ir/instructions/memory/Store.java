@@ -1,5 +1,8 @@
 package ir.instructions.memory;
 
+import backend.Mc;
+import backend.MipsBuilder;
+import backend.operands.MipsOperand;
 import ir.values.BasicBlock;
 import ir.values.Value;
 import ir.instructions.Instruction;
@@ -21,5 +24,15 @@ public class Store extends Instruction {
     public String toString() {
         return "store "+getOperands().get(0).getValueType() + " " + getOperands().get(0).getName() + ", "
                 + getOperands().get(1).getValueType() + " " + getOperands().get(1).getName();
+    }
+
+
+    @Override
+    public void buildMips() {
+        MipsBuilder builder = MipsBuilder.getInstance();
+        MipsOperand src = builder.buildOperand(getOperands().get(0), false, Mc.curIrFunction, getParent());
+        MipsOperand addr = builder.buildOperand(getOperands().get(1), false, Mc.curIrFunction, getParent());
+        MipsOperand offset = builder.buildImmeOperand(0, true, Mc.curIrFunction, getParent());
+        builder.buildStore(src, offset, addr, getParent());
     }
 }

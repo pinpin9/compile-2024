@@ -1,5 +1,13 @@
 package ir.instructions;
 
+import backend.Mc;
+import backend.MipsBuilder;
+import backend.operands.MipsImme;
+import backend.operands.MipsOperand;
+import ir.instructions.binary.Icmp;
+import ir.types.constants.ConstChar;
+import ir.types.constants.ConstInt;
+import ir.types.constants.Constant;
 import ir.values.BasicBlock;
 import ir.values.Value;
 import ir.types.IntType;
@@ -29,4 +37,23 @@ public class Zext extends Instruction{
         stringBuilder.append(" to i32");
         return stringBuilder.toString();
     }
+
+
+    @Override
+    public void buildMips() {
+        MipsBuilder builder = MipsBuilder.getInstance();
+        Value value = getOperands().get(0);
+        //
+        if(value instanceof Icmp){ // i1
+            ((Icmp) value).build();
+            Mc.addOperandMap(this, Mc.getMappedValue(value));
+        } else if (value instanceof Constant) { // 常数
+            MipsOperand imme = builder.buildImmeOperand(((ConstChar)value).getValue(), true, Mc.curIrFunction, getParent());
+            Mc.addOperandMap(this, imme);
+        } else { // i8
+            Mc.addOperandMap(this, Mc.getMappedValue(value));
+        }
+
+    }
+
 }

@@ -28,6 +28,21 @@ public class MipsModule {
         }
         mipsFunctions.add(mipsFunction);
     }
+
+    public List<MipsFunction> getMipsFunctions() {
+        return mipsFunctions;
+    }
+
+    public ArrayList<MipsFunction> getNotLibFunctions() {
+        ArrayList<MipsFunction> notLibFunctions = new ArrayList<>();
+        for (MipsFunction function : mipsFunctions) {
+            if (!function.isLibFuc()) {
+                notLibFunctions.add(function);
+            }
+        }
+        return notLibFunctions;
+    }
+
     public void addGlobalVariable(MipsGlobalVariable mipsGlobalVariable){
         mipsGlobalVariables.add(mipsGlobalVariable);
     }
@@ -43,7 +58,7 @@ public class MipsModule {
         stringBuilder.append(".end_macro\n\n");
         // getchar
         stringBuilder.append(".macro getchar\n");
-        stringBuilder.append("\tli $v0, 5\n");
+        stringBuilder.append("\tli $v0, 12\n");
         stringBuilder.append("\tsyscall\n");
         stringBuilder.append(".end_macro\n\n");
         // putint

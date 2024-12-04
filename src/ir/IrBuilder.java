@@ -59,7 +59,7 @@ public class IrBuilder {
 
     private int strCnt = 0;
     private String getStrName(){
-        return ".str"+strCnt++;
+        return "str"+strCnt++;
     }
     private String getPhiName(){
         return "%p"+nameCnt++;
@@ -129,7 +129,7 @@ public class IrBuilder {
     public Alloca buildAlloca(ValueType allocatedType, BasicBlock basicBlock){
         BasicBlock realParent = ((Function)basicBlock.getParent()).getFirstBlock();
         Alloca alloca = new Alloca(allocatedType, getName(), realParent);
-        basicBlock.addHeadInstruction(alloca);
+        realParent.addHeadInstruction(alloca);
         return alloca;
     }
 

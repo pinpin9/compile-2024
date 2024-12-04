@@ -17,6 +17,13 @@ public class BinaryInstruction extends Instruction {
         this.insType = insType;
     }
 
+    public Value getOp1(){
+        return getOperands().get(0);
+    }
+    public Value getOp2(){
+        return getOperands().get(1);
+    }
+
     // %8 = add i32 %7, 5
     @Override
     public String toString() {

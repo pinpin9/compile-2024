@@ -1,5 +1,7 @@
 package backend.operands;
 
+import java.util.Objects;
+
 /**
  * @author zlp
  * @Discription 物理寄存器
@@ -25,6 +27,11 @@ public class MipsPhyReg extends MipsOperand{
         this.regType = RegType.getRegType(index);
         this.isAllocated = isAllocated;
     }
+    public MipsPhyReg(RegType regType, boolean isAllocated){
+        this.regType = regType;
+        this.isAllocated = isAllocated;
+    }
+
 
     public static final MipsPhyReg ZERO = new MipsPhyReg("zero");
     public static final MipsPhyReg AT = new MipsPhyReg("at");
@@ -57,6 +64,22 @@ public class MipsPhyReg extends MipsOperand{
     @Override
     public boolean isAllocated() {
         return isAllocated;
+    }
+
+    public void setAllocated(Boolean isAllocated){
+        this.isAllocated = isAllocated;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MipsPhyReg reg = (MipsPhyReg) o;
+        return regType == reg.regType && isAllocated == reg.isAllocated;
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIndex(), isAllocated);
     }
 
     @Override

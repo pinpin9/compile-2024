@@ -11,8 +11,16 @@ public class MipsBasicBlock {
     private int loopDepth;
     private static int nameCnt = 0;
     public MipsBasicBlock(String name, int loopDepth){
-        this.name = name.substring(1); // 去掉开头的@
+        this.name = name.substring(1)+"_"+nameCnt++; // 去掉开头的@
         this.loopDepth = loopDepth;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getLoopDepth() {
+        return loopDepth;
     }
 
     // 因为需要实现头尾插入删除，所以用LinkedList
@@ -22,7 +30,7 @@ public class MipsBasicBlock {
     public void setInstructions(LinkedList<MipsInstruction> instructions) {
         this.instructions = instructions;
     }
-    public List<MipsInstruction> getInstructions(){
+    public LinkedList<MipsInstruction> getInstructions(){
         return instructions;
     }
     public void addTailInstruction(MipsInstruction mipsInstruction){
@@ -36,6 +44,24 @@ public class MipsBasicBlock {
     }
     public MipsInstruction getLastInstruction(){
         return instructions.getLast();
+    }
+    public void insertAfter(MipsInstruction dst, MipsInstruction src){
+        for(MipsInstruction instruction : instructions){
+            if(instruction.equals(dst)){
+                int index = instructions.indexOf(dst);
+                instructions.add(index+1, src);
+                return;
+            }
+        }
+    }
+    public void insertBefore(MipsInstruction dst, MipsInstruction src){
+        for(MipsInstruction instruction : instructions){
+            if(instruction.equals(dst)){
+                int index = instructions.indexOf(dst);
+                instructions.add(index, src);
+                return;
+            }
+        }
     }
 
     //============前驱和后继块============
@@ -69,6 +95,7 @@ public class MipsBasicBlock {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(name).append(":\n");
         for(MipsInstruction instruction:instructions){
+//            System.out.println("def:"+instruction.getDefRegs());
             stringBuilder.append("\t").append(instruction);
         }
         return stringBuilder.toString();

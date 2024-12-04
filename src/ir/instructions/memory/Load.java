@@ -1,5 +1,9 @@
 package ir.instructions.memory;
 
+import backend.Mc;
+import backend.MipsBuilder;
+import backend.instructions.MipsBinary;
+import backend.operands.MipsOperand;
 import ir.values.BasicBlock;
 import ir.values.Value;
 import ir.instructions.Instruction;
@@ -25,5 +29,14 @@ public class Load extends Instruction {
         stringBuilder.append(loadType).append(", ");
         stringBuilder.append(loadType).append("* ").append(getOperands().get(0).getName());
         return stringBuilder.toString();
+    }
+
+    @Override
+    public void buildMips() {
+        MipsBuilder builder = MipsBuilder.getInstance();
+        MipsOperand dst = builder.buildOperand(this, false, Mc.curIrFunction, getParent());
+        MipsOperand base = builder.buildOperand(getOperands().get(0), false, Mc.curIrFunction, getParent());
+        MipsOperand offset = builder.buildImmeOperand(0, true, Mc.curIrFunction, getParent());
+        builder.buildLoad(dst, base, offset, getParent());
     }
 }
