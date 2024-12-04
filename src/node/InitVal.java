@@ -66,6 +66,10 @@ public class InitVal extends Node{
             string = string.substring(1,string.length()-1);
             for(int i = 0; i< string.length();i++){
                 char ch = string.charAt(i);
+                if(ch == '\\'){
+                    i++;
+                    ch = '\n';
+                }
                 valueUpList.add(new ConstInt(ch));
             }
             valueUpList.add(new ConstInt(0));

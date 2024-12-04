@@ -48,8 +48,8 @@ public enum MipsCondType{
 
     public static MipsCondType getOppCondType(MipsCondType cond){
         return switch (cond){
-            case EQ -> NE;
-            case NE -> EQ;
+            case EQ -> EQ;
+            case NE -> NE;
             case LT -> GE;
             case LE -> GT;
             case GT -> LE;

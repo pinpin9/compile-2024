@@ -31,7 +31,6 @@ public class Add extends BinaryInstruction {
             int val2 = op2 instanceof ConstInt ? ((ConstInt)op2).getValue() : ((ConstChar)op2).getValue();
             int result = val1 + val2;
             builder.buildMove(dst, new MipsImme(result), getParent());
-
         } else if (op1 instanceof Constant) {
             src1 = builder.buildOperand(op2, false, Mc.curIrFunction, getParent());
             src2 = builder.buildOperand(op1, true, Mc.curIrFunction, getParent());
