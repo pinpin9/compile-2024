@@ -61,7 +61,7 @@ public class MipsBinary extends MipsInstruction{
          * 这里的作用是取rs * rt的高32位并累加至HI，结果存入dst
          * 语法：SMMADD rd, rs, rt, ra
          */
-        MADD("smmadd"),
+        MADD("madd"),
         /**
          * 按位与
          * 用于trunc中
@@ -141,7 +141,6 @@ public class MipsBinary extends MipsInstruction{
                 default -> typeStr = type.toString();
             }
             stringBuilder.append(typeStr + " " + getDst()+", " + getSrc1() + ", " + getSrc2() + "\n");
-            return stringBuilder.toString();
         } else {
             switch (type){
                 case DIV -> {
@@ -153,12 +152,12 @@ public class MipsBinary extends MipsInstruction{
                 case MADD, MULT -> {
                     // {HI, LO}<-{HI, LO}+ rs x rt
                     // dst ← HI
-                    stringBuilder.append(type + " " + getSrc1() + getSrc2() + "\n");
+                    stringBuilder.append(type + " " + getSrc1() + " " + getSrc2() + "\n");
                     stringBuilder.append("\t" + "mfhi " + dst + "\n");
                 }
                 default -> stringBuilder.append(type + " " + getDst() + ", " + getSrc1() + ", " + getSrc2() + "\n");
             }
-            return stringBuilder.toString();
         }
+        return stringBuilder.toString();
     }
 }

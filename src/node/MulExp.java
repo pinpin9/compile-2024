@@ -1,10 +1,14 @@
 package node;
 
+import backend.opt.MulOptimizer;
+import ir.instructions.binary.Mul;
+import ir.instructions.binary.Sdiv;
 import ir.values.Value;
 import ir.types.constants.ConstChar;
 import ir.types.constants.ConstInt;
 import ir.types.constants.Constant;
 import token.Token;
+import tools.MipsMath;
 
 import java.util.List;
 
@@ -67,7 +71,20 @@ public class MulExp extends Node{
                     } else if (op.getType() == Token.TokenType.DIV) {
                         value1 = builder.buildSdiv(curBlock, value1,value2);
                     } else {
-                        value1 = builder.buildSrem(curBlock, value1, value2);
+                        if (value2 instanceof Constant){
+                            int num = value2 instanceof ConstInt ? ((ConstInt) value2).getValue() : ((ConstChar)value2).getValue();
+                            if(num == 1){
+                                value1 = builder.buildSrem(curBlock, value1, value2);
+                            } else {
+                                Sdiv x = builder.buildSdiv(curBlock, value1, value2);
+                                Mul y = builder.buildMul(curBlock, x, value2);
+                                value1 = builder.buildSub(curBlock, value1, y);
+                            }
+                        } else {
+                            Sdiv x = builder.buildSdiv(curBlock, value1, value2);
+                            Mul y = builder.buildMul(curBlock, x, value2);
+                            value1 = builder.buildSub(curBlock, value1, y);
+                        }
                     }
                 }
             }
@@ -77,7 +94,7 @@ public class MulExp extends Node{
 
     private Constant getResult(Value value1, Value value2, Token op){
         int val1 = value1 instanceof ConstInt ? ((ConstInt) value1).getValue() : ((ConstChar)value1).getValue();
-        int val2 = value2 instanceof ConstInt ? ((ConstInt) value2).getValue() : ((ConstChar)value2).getValue();;
+        int val2 = value2 instanceof ConstInt ? ((ConstInt) value2).getValue() : ((ConstChar)value2).getValue();
         if(op.getType() == Token.TokenType.MULT){
             return new ConstInt(val1*val2);
         } else if (op.getType() == Token.TokenType.DIV) {

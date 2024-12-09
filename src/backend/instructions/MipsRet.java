@@ -5,7 +5,7 @@ import backend.values.MipsFunction;
 
 // jr ra
 public class MipsRet extends MipsInstruction{
-    private MipsFunction curFunction = null;
+    private MipsFunction curFunction;
     public MipsRet(MipsFunction curFunction){
         this.curFunction = curFunction;
     }
@@ -15,16 +15,19 @@ public class MipsRet extends MipsInstruction{
         StringBuilder stringBuilder = new StringBuilder();
         int totalSize = curFunction.getStackTotalSize();
         // 将栈指针复位
-        stringBuilder.append("addiu $sp,  $sp, ").append(totalSize).append("\n");
+        if(totalSize != 0){
+            stringBuilder.append("add $sp, $sp, ").append(totalSize).append("\n");
+        }
+
         // 如果是主函数，则直接结束运行
         if(curFunction.getName().equals("main")){
             stringBuilder.append("\tli $v0 10\n");
             stringBuilder.append("\tsyscall\n\n");
         } else { // 非主函数，需要恢复现场，恢复寄存器
-            int offset = 0;
+            int offset = -4;
             for(RegType regType : curFunction.getRegsNeedSave()){
+                stringBuilder.append("\tlw ").append(regType).append(", ").append(offset).append("($sp)\n");
                 offset -= 4;
-                stringBuilder.append("\t").append("lw ").append(regType).append(", ").append(offset).append("($sp)\n");
             }
             stringBuilder.append("\tjr $ra\n");
         }

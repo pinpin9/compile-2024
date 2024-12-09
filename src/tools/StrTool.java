@@ -47,9 +47,9 @@ public class StrTool {
     }
 
     public static int getLen(String string){
-        string = string.replace("\\0A","\\n");
+        String newString = string.replace("\\0A","\\n");
         int cnt = 0;
-        for(int i = 0;i<string.length();i++){
+        for(int i = 0;i<newString.length();i++){
             cnt ++;
             if(string.charAt(i)=='\\'){
                 i++;

@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  * @author zlp
- * @Discription 标签类型
+ * @Discription 标签类型，全局变量等
  * @date 2024/11/19
  */
 public class MipsLabel extends MipsOperand{

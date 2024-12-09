@@ -121,14 +121,13 @@ public class Function extends User {
     }
 
     //==========目标代码生成==========
-    MipsBuilder mipsBuilder = MipsBuilder.getInstance();
     public void buildMips(){
         // 只有非链接函数才需要构建
         if(!isLibFunc){
             Mc.curIrFunction = this;
             MipsFunction mipsFunction = Mc.getMappedFunction(this); // 对应的mips函数块
             MipsBasicBlock firstBlock = Mc.getMappedBlock(getFirstBlock()); // 第一个基本块
-            for(BasicBlock block:basicBlockList){
+            for(BasicBlock block : basicBlockList){
                 block.buildMips();
             }
             // 进行序列化

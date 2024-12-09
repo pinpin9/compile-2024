@@ -22,24 +22,9 @@ public class Mul extends BinaryInstruction {
     @Override
     public void buildMips() {
         MipsBuilder builder = MipsBuilder.getInstance();
-        MipsBasicBlock parentBlock = Mc.getMappedBlock(getParent());
         Value op1 = getOp1();
         Value op2 = getOp2();
         MipsOperand dst = builder.buildOperand(this, false, Mc.curIrFunction, getParent());
-        MipsOperand src1, src2;
-        if(op1 instanceof Constant && op2 instanceof Constant){ // 全是常数
-            int val1 = op1 instanceof ConstInt ? ((ConstInt)op1).getValue() : ((ConstChar)op1).getValue();
-            int val2 = op2 instanceof ConstInt ? ((ConstInt)op2).getValue() : ((ConstChar)op2).getValue();
-            int result = val1 + val2;
-            builder.buildMove(dst, new MipsImme(result), getParent());
-        } else if (op1 instanceof Constant) {
-            src1 = builder.buildOperand(op2, false, Mc.curIrFunction, getParent());
-            src2 = builder.buildOperand(op1, true, Mc.curIrFunction, getParent());
-            builder.buildBinary(MipsBinary.BinaryType.MUL, dst, src1, src2, getParent());
-        } else {
-            src1 = builder.buildOperand(op1, false, Mc.curIrFunction, getParent());
-            src2 = builder.buildOperand(op2, false, Mc.curIrFunction, getParent());
-            builder.buildBinary(MipsBinary.BinaryType.MUL, dst, src1, src2, getParent());
-        }
+        builder.buildMul(dst, op1, op2, Mc.curIrFunction, getParent());
     }
 }

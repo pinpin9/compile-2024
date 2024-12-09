@@ -47,7 +47,7 @@ public class GlobalVariable extends User {
     public void buildMips(){
         // 只需要生成global
         if(initValue instanceof ConstStr){ // 字符串
-            mipsBuilder.buildGlobalVariable(getName(), ((ConstStr)initValue).getString());
+            mipsBuilder.buildGlobalVariable(getName(), ((ConstStr)initValue).getString().replace("\\0A", "\\n"));
         } else if (initValue instanceof ZeroInitializer) { // 没有初始化
             mipsBuilder.buildGlobalVariable(getName(), initValue.getValueType().getSize());
         } else if(initValue instanceof ConstInt){
@@ -60,7 +60,7 @@ public class GlobalVariable extends User {
 //                add(((ConstChar)initValue).getValue());
 //            }});
             mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.intType, new ArrayList<>(){{
-                add(((ConstChar)initValue).getValue());
+                add(((ConstChar)initValue).getValue()&0xff);
             }});
         } else if (initValue instanceof ConstArray){
             List<Constant> values = ((ConstArray) initValue).getValues(); // ConstArray中的值
@@ -73,7 +73,7 @@ public class GlobalVariable extends User {
                 mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.intType, initArray);
             } else {
                 for(int i = 0; i < initLen; i++){
-                    initArray.add(((ConstChar)values.get(i)).getValue());
+                    initArray.add(((ConstChar)values.get(i)).getValue()&0xff);
                 }
                 // TODO : 暂时都当做4字节来做
                 mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.intType, initArray);

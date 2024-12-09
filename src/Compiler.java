@@ -45,6 +45,5 @@ public class Compiler {
             RegBuilder.getInstance().process(MipsModule.getModule());
             MipsBuilder.getInstance().print();
         }
-
     }
 }

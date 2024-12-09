@@ -6,12 +6,13 @@ import backend.operands.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 public class MipsFunction {
     private String name;
     private boolean isLibFuc;
     private ArrayList<MipsBasicBlock> mipsBasicBlocks = new ArrayList<>(); // 函数下的基本块
-    private HashSet<RegType> regsNeedSave = new HashSet<>(); // 函数中用到的寄存器，除了a0-a4等，需要保存现场
+    private TreeSet<RegType> regsNeedSave = new TreeSet<>(); // 函数中用到的寄存器，除了a0-a4等，需要保存现场
     private HashSet<MipsImme> argsOffset = new HashSet<>(); // 相对于栈顶的偏移
     private HashSet<MipsVirReg> usedVirRegs = new HashSet<>(); // 当前函数模块使用的虚拟寄存器
 
@@ -21,7 +22,7 @@ public class MipsFunction {
     public boolean isLibFuc() {
         return isLibFuc;
     }
-    public HashSet<RegType> getRegsNeedSave() { // 返回需要保存现场的寄存器
+    public TreeSet<RegType> getRegsNeedSave() { // 返回需要保存现场的寄存器
         return regsNeedSave;
     }
     public HashSet<MipsVirReg> getUsedVirRegs() {
@@ -57,10 +58,10 @@ public class MipsFunction {
 
     /**
      * 函数栈的空间从上到下依次为：
-     * 1.局部变量
-     * 2.调用者保存的寄存器
-     * 3.参数的 alloca
-     * 4.参数
+     * 1.调用者保存的寄存器
+     * 2.局部变量
+     * 3.其余参数的 alloca
+     * 4.前四个参数 alloca
      */
     public void buildStack(){
         for(MipsBasicBlock block:mipsBasicBlocks){ // 遍历所有的基本块

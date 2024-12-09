@@ -81,7 +81,7 @@ public class Getelementptr extends Instruction {
 
     private void handleCal(MipsOperand dst, MipsOperand mid, MipsOperand base, Value irOffset, ValueType valueType){
         int valueSize = valueType.getSize();
-        if(valueSize == 1){
+        if(valueSize == 1){ // char也当作int处理
             valueSize = 4;
         }
 

@@ -6,7 +6,7 @@ import backend.values.MipsBasicBlock;
 // j指令, b指令
 public class MipsBranch extends MipsInstruction{
     private MipsCondType cond = null;
-    private MipsBasicBlock target = null;
+    private MipsBasicBlock target;
     private MipsOperand op1 = null;
     private MipsOperand op2 = null;
 

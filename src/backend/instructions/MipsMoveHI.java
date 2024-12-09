@@ -21,7 +21,7 @@ public class MipsMoveHI extends MipsInstruction{
         }
     }
 
-    private MoveHIType type = null;
+    private MoveHIType type;
     private MipsOperand dst = null;
     private MipsOperand src = null;
 
@@ -36,10 +36,10 @@ public class MipsMoveHI extends MipsInstruction{
 
     @Override
     public void replaceReg(MipsOperand oldReg, MipsOperand newReg) {
-        if(dst.equals(oldReg)){
+        if(dst!=null&&dst.equals(oldReg)){
             setDst(newReg);
         }
-        if(src.equals(oldReg)){
+        if(src!=null&&src.equals(oldReg)){
             setSrc(newReg);
         }
     }
@@ -57,7 +57,7 @@ public class MipsMoveHI extends MipsInstruction{
     public String toString() {
         MipsOperand op = dst != null ? dst:src;
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(type).append(" ").append(op).append("\n");
+        stringBuilder.append(type.toString()).append(" ").append(op).append("\n");
         return stringBuilder.toString();
     }
 }

@@ -39,15 +39,13 @@ public class Ret extends Instruction {
 
     @Override
     public void buildMips() {
-        MipsFunction mipsFunction = Mc.getMappedFunction(Mc.curIrFunction);
         MipsBuilder builder = MipsBuilder.getInstance();
 
         if(!getOperands().isEmpty()){
             Value value = getOperands().get(0);
             MipsOperand retValue = builder.buildOperand(value, true, Mc.curIrFunction, getParent());
             builder.buildMove(MipsPhyReg.V0, retValue, getParent());
-
         }
-        builder.buildRet(mipsFunction, getParent());
+        builder.buildRet(Mc.curIrFunction, getParent());
     }
 }

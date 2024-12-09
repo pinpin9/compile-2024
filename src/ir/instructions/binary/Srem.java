@@ -22,25 +22,7 @@ public class Srem extends BinaryInstruction {
     @Override
     public void buildMips() {
         MipsBuilder builder = MipsBuilder.getInstance();
-        MipsBasicBlock parentBlock = Mc.getMappedBlock(getParent());
-        Value op1 = getOp1();
-        Value op2 = getOp2();
         MipsOperand dst = builder.buildOperand(this, false, Mc.curIrFunction, getParent());
-        MipsOperand src1 = null, src2 = null;
-        if(op1 instanceof Constant && op2 instanceof Constant){ // 全是常数
-            int val1 = op1 instanceof ConstInt ? ((ConstInt)op1).getValue() : ((ConstChar)op1).getValue();
-            int val2 = op2 instanceof ConstInt ? ((ConstInt)op2).getValue() : ((ConstChar)op2).getValue();
-            int result = val1 % val2;
-            builder.buildMove(dst, new MipsImme(result), getParent());
-        } else if (op1 instanceof Constant) {
-            src1 = builder.buildOperand(op2, false, Mc.curIrFunction, getParent());
-            src2 = builder.buildOperand(op1, true, Mc.curIrFunction, getParent());
-        } else {
-            src1 = builder.buildOperand(op1, false, Mc.curIrFunction, getParent());
-            src2 = builder.buildOperand(op2, false, Mc.curIrFunction, getParent());
-        }
-        builder.buildBinary(MipsBinary.BinaryType.DIV, MipsPhyReg.AT, src1, src2,getParent());
-        builder.buildBinary(MipsBinary.BinaryType.MUL, MipsPhyReg.AT, MipsPhyReg.AT, src2, getParent());
-        builder.buildBinary(MipsBinary.BinaryType.SUBU, dst, src1, MipsPhyReg.AT, getParent());
+        builder.buildMove(dst, MipsPhyReg.ZERO, getParent());
     }
 }

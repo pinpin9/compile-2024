@@ -105,14 +105,14 @@ public class SymbolStack {
     }
 
     /*=====标志是否处于循环中，对break，Continue的处理=====*/
-    private boolean isInLoop = false;
+    private int isInLoop = 0;
     public boolean isInLoop(){
-        return isInLoop;
+        return isInLoop>0;
     }
     public void inLoop(){
-        isInLoop = true;
+        isInLoop += 1;
     }
     public void leaveLoop(){
-        isInLoop = false;
+        isInLoop -= 1;
     }
 }

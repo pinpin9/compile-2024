@@ -32,7 +32,7 @@ public enum MipsCondType{
         return ir2MipsCond.get(cond);
     }
 
-    public static int calCompare(MipsCondType cond, int op1, int op2){ // 获取相反的符号
+    public static int calCompare(MipsCondType cond, int op1, int op2){ // 获取运算结果
         boolean result;
         switch (cond){
             case NE -> result = op1 != op2;
@@ -50,10 +50,10 @@ public enum MipsCondType{
         return switch (cond){
             case EQ -> EQ;
             case NE -> NE;
-            case LT -> GE;
-            case LE -> GT;
-            case GT -> LE;
-            case GE -> LT;
+            case LT -> GT;
+            case LE -> GE;
+            case GT -> LT;
+            case GE -> LE;
         };
     }
 

@@ -23,6 +23,7 @@ public class MipsStore extends MipsInstruction{
     }
 
     public void setOffset(MipsOperand op){
+        addUseReg(this.offset, op);
         this.offset = op;
     }
 
@@ -34,16 +35,19 @@ public class MipsStore extends MipsInstruction{
         if(addr.equals(oldReg)){
             setOp2(newReg);
         }
+        if(offset.equals(oldReg)){
+            setOffset(newReg);
+        }
+
     }
     public MipsStore(MipsOperand src, MipsOperand addr, MipsOperand offset){
         setOp1(src);
         setOp2(addr);
-        this.offset = offset;
+        setOffset(offset);
     }
 
     @Override
     public String toString() {
-//        System.out.println(getUseRegs());
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("sw ").append(src).append(", ").append(offset).append("("+ addr +")\n");
         return stringBuilder.toString();

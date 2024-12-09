@@ -1,5 +1,6 @@
 package backend.instructions;
 
+
 public class MipsMacro extends MipsInstruction{
     private String content;
 

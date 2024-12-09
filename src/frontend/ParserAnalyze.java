@@ -66,7 +66,6 @@ public class ParserAnalyze {
             currentIndex++;
             currentToken = tokens.get(currentIndex);
         }
-
     }
 
     // 读取index个偏移以后的Token，判断非终结符的类型

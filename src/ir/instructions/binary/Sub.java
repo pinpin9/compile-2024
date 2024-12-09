@@ -31,9 +31,10 @@ public class Sub extends BinaryInstruction {
             int result = val1 - val2;
             builder.buildMove(dst, new MipsImme(result), getParent());
         } else if (op2 instanceof Constant) {
+            int value = op2 instanceof ConstInt ? ((ConstInt)op2).getValue() : ((ConstChar)op2).getValue();
             src1 = builder.buildOperand(op1, false, Mc.curIrFunction, getParent());
-            src2 = builder.buildOperand(op2, true, Mc.curIrFunction, getParent());
-            builder.buildBinary(MipsBinary.BinaryType.SUBU, dst, src1, src2, getParent());
+            src2 = builder.buildImmeOperand(-value, true, Mc.curIrFunction, getParent());
+            builder.buildBinary(MipsBinary.BinaryType.ADDU, dst, src1, src2, getParent());
         } else {
             src1 = builder.buildOperand(op1, false, Mc.curIrFunction, getParent());
             src2 = builder.buildOperand(op2, true, Mc.curIrFunction, getParent());

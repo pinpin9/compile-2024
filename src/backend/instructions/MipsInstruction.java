@@ -27,12 +27,12 @@ public class MipsInstruction {
         }
     }
     public void remDefReg(MipsOperand op){
-        if(op != null && op instanceof MipsOperand){
+        if(op != null){
             defRegs.remove(op);
         }
     }
     public void remUseReg(MipsOperand op){
-        if(op != null && op instanceof MipsOperand){
+        if(op != null){
             useRegs.remove(op);
         }
     }

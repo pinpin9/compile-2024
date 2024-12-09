@@ -9,7 +9,7 @@ import backend.values.MipsFunction;
  * @date 2024/11/21
  */
 public class MipsCall extends MipsInstruction{
-    private MipsFunction function = null;
+    private MipsFunction function;
     public MipsCall(MipsFunction function){
         this.function = function;
     }

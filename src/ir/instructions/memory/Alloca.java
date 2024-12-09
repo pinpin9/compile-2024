@@ -57,9 +57,9 @@ public class Alloca extends Instruction {
         MipsOperand allocatedSizeImme = builder.buildImmeOperand(allocatedSize, true, Mc.curIrFunction, getParent());
         int tmpSize = allocatedType.getSize();
         if(allocatedType instanceof CharType){
-            tmpSize = tmpSize*4;
+            tmpSize = tmpSize * 4;
         } else if (allocatedType instanceof ArrayType && ((ArrayType)allocatedType).getValueType().isChar()) {
-            tmpSize = tmpSize*4;
+            tmpSize = tmpSize * 4;
         }
         curFunction.allocSpace(tmpSize);
 

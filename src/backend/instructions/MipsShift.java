@@ -14,10 +14,10 @@ public class MipsShift extends MipsInstruction{
         SRL,
         SRA
     }
-    private ShiftType shiftType = null;
+    private ShiftType shiftType;
     private MipsOperand dst = null;
     private MipsOperand src = null; // 操作数
-    private MipsOperand offset = null; // 偏移量，常数
+    private int offset = 0; // 偏移量，常数
     public void setDst(MipsOperand dst) {
         addDefReg(this.dst, dst);
         this.dst = dst;
@@ -37,7 +37,7 @@ public class MipsShift extends MipsInstruction{
         }
     }
 
-    public MipsShift(ShiftType shiftType, MipsOperand dst, MipsOperand src, MipsOperand offset){
+    public MipsShift(ShiftType shiftType, MipsOperand dst, MipsOperand src, int offset){
         this.shiftType = shiftType;
         setDst(dst);
         setSrc(src);

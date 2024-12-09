@@ -2,6 +2,7 @@ package backend;
 
 import backend.instructions.*;
 import backend.operands.*;
+import backend.opt.MulOptimizer;
 import backend.values.MipsBasicBlock;
 import backend.values.MipsFunction;
 import backend.values.MipsGlobalVariable;
@@ -13,7 +14,11 @@ import ir.values.*;
 import ir.values.Module;
 import settings.Settings;
 import tools.IO;
+import tools.MipsMath;
+import tools.Pair;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -214,8 +219,8 @@ public class MipsBuilder {
         return load;
     }
 
-    public MipsRet buildRet(MipsFunction mipsFunction, BasicBlock block){
-        MipsRet ret = new MipsRet(mipsFunction);
+    public MipsRet buildRet(Function irFunction, BasicBlock block){
+        MipsRet ret = new MipsRet(Mc.getMappedFunction(irFunction));
         MipsBasicBlock mipsBasicBlock = Mc.getMappedBlock(block);
         mipsBasicBlock.addTailInstruction(ret);
         return ret;
@@ -227,6 +232,97 @@ public class MipsBuilder {
         mipsBasicBlock.addTailInstruction(compare);
         return compare;
     }
+
+    public MipsShift buildShift(MipsShift.ShiftType shiftType, MipsOperand dst, MipsOperand src1, Integer second, BasicBlock parent) {
+        MipsShift shift = new MipsShift(shiftType, dst, src1, second);
+        MipsBasicBlock mipsBasicBlock = Mc.getMappedBlock(parent);
+        mipsBasicBlock.addTailInstruction(shift);
+        return shift;
+    }
+
+    public MipsMoveHI buildMoveHI(MipsMoveHI.MoveHIType type, MipsOperand op, BasicBlock parent){
+        MipsMoveHI moveHI = new MipsMoveHI(type, op);
+        MipsBasicBlock mipsBasicBlock = Mc.getMappedBlock(parent);
+        mipsBasicBlock.addTailInstruction(moveHI);
+        return moveHI;
+    }
+
+
+    //=============基于优化的乘法===============
+    public void buildMul(MipsOperand dst, Value op1, Value op2, Function irFunction, BasicBlock irBlock){
+        // 计算的式子
+        Boolean isOp1ConstInt = op1 instanceof ConstInt;
+        Boolean isOp2ConstInt = op2 instanceof ConstInt;
+        MipsOperand src1, src2;
+        // 有常数，可以进行优化
+        if(isOp1ConstInt || isOp2ConstInt){
+            int imme;
+            if(isOp1ConstInt){
+                src1 = buildOperand(op2, false, irFunction, irBlock);
+                imme = ((ConstInt)op1).getValue();
+            } else {
+                src1 = buildOperand(op1, false, irFunction, irBlock);
+                imme = ((ConstInt)op2).getValue();
+            }
+            // 根据常数imme获取优化操作序列
+            ArrayList<Pair<Boolean, Integer>> mulOptItems = MipsMath.getMulOptItems(imme);
+            if(mulOptItems == null){ // 无法优化
+                if (isOp1ConstInt){
+                    src2 = buildOperand(op1, false, irFunction, irBlock);
+                } else {
+                    src2 = buildOperand(op2, false, irFunction, irBlock);
+                }
+            } else { // 可以优化
+                if (mulOptItems.size() == 1){
+                    doOptMulStep1(mulOptItems.get(0), dst, src1, irBlock);
+                } else {
+                    doOptMulStep1(mulOptItems.get(0), MipsPhyReg.AT, src1, irBlock);
+                    for(int i = 1; i < mulOptItems.size()-1; i++){
+                        doOptMulStep(mulOptItems.get(i), MipsPhyReg.AT, MipsPhyReg.AT, src1, irBlock);
+                    }
+                    doOptMulStep(mulOptItems.get(mulOptItems.size()-1), dst, MipsPhyReg.AT, src1, irBlock);
+
+                }
+                return;
+            }
+        } else {
+            src1 = buildOperand(op1, false, irFunction, irBlock);
+            src2 = buildOperand(op2, false, irFunction, irBlock);
+        }
+        buildBinary(MipsBinary.BinaryType.MUL, dst, src1, src2, irBlock);
+    }
+
+    private void doOptMulStep1(Pair<Boolean, Integer> optItem, MipsOperand dst, MipsOperand src1, BasicBlock irBlock){
+        // dst = src1 << mulOptItems.get(0).getSecond()
+        buildShift(MipsShift.ShiftType.SLL, dst, src1, optItem.getSecond(), irBlock);
+        // dst = -dst
+        if (!optItem.getFirst()) {
+            buildBinary(MipsBinary.BinaryType.SUBU, dst, MipsPhyReg.ZERO, dst, irBlock);
+        }
+    }
+
+    private void doOptMulStep(Pair<Boolean, Integer> optItem, MipsOperand dst, MipsOperand tmpDst, MipsOperand src1, BasicBlock irBlock){
+        if (optItem.getSecond() == 0) {
+            // at
+            if(optItem.getFirst()){
+                buildBinary(MipsBinary.BinaryType.ADDU, dst, tmpDst, src1, irBlock);
+            } else{
+                buildBinary(MipsBinary.BinaryType.SUBU, dst, tmpDst, src1, irBlock);
+            }
+        }
+        // 需要位移
+        else {
+            // 生成周转用的虚拟寄存器 tmp = src1 << mulOptItems.get(0).getSecond()
+            MipsOperand tmp = buildVirReg(Mc.curIrFunction);
+            buildShift(MipsShift.ShiftType.SLL, tmp, src1, optItem.getSecond(), irBlock);
+            if(optItem.getFirst()){
+                buildBinary(MipsBinary.BinaryType.ADDU, dst, tmpDst, tmp, irBlock);
+            } else{
+                buildBinary(MipsBinary.BinaryType.SUBU, dst, tmpDst, tmp, irBlock);
+            }
+        }
+    }
+
 
 
     // 输出

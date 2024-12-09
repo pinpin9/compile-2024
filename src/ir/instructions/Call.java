@@ -29,7 +29,7 @@ public class Call extends Instruction{
      * @param args
      */
     public Call(String name, BasicBlock basicBlock, Function function, List<Value> args){
-        super(function.getRetType(), name, basicBlock, new ArrayList<Value>(){{
+        super(function.getRetType(), name, basicBlock, new ArrayList<>() {{
             add(function);
             addAll(args);
         }});
@@ -89,7 +89,7 @@ public class Call extends Instruction{
 
         if(argc > 4){
             // 栈向下生长 SP = SP - 4 * num
-            MipsOperand offset = builder.buildImmeOperand(4*(argc-4), true, Mc.curIrFunction, getParent());
+            MipsOperand offset = builder.buildImmeOperand(4 * (argc - 4), true, Mc.curIrFunction, getParent());
             builder.buildBinary(MipsBinary.BinaryType.SUBU, MipsPhyReg.SP, MipsPhyReg.SP, offset, getParent());
         }
 
@@ -98,11 +98,11 @@ public class Call extends Instruction{
 
         if(argc > 4){
             // 栈的恢复
-            MipsOperand offset = builder.buildImmeOperand(4*(argc-4), true, Mc.curIrFunction, getParent());
+            MipsOperand offset = builder.buildImmeOperand(4 * (argc - 4), true, Mc.curIrFunction, getParent());
             builder.buildBinary(MipsBinary.BinaryType.ADDU, MipsPhyReg.SP, MipsPhyReg.SP, offset, getParent());
         }
 
-        for(int i = 0;i<4;i++){
+        for(int i = 0; i < 4; i++){
             callIns.addDefReg(new MipsPhyReg("a"+i));
         }
 
@@ -112,6 +112,7 @@ public class Call extends Instruction{
 
         // 处理返回值
         ValueType rtnType = function.getRetType();
+        // 无论有无返回值，都需保存$V0
         callIns.addDefReg(MipsPhyReg.V0);
         if(!(rtnType instanceof VoidType)){
             MipsOperand dst = builder.buildOperand(this, false, Mc.curIrFunction, getParent());
