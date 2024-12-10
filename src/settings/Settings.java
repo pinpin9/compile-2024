@@ -11,4 +11,7 @@ public class Settings {
 
     // 是否生成mips
     public static final boolean generateMips = true;
+
+    // 是否开启图着色寄存器分配
+    public static final boolean openRegAlloc = true;
 }

@@ -37,9 +37,9 @@ public class Store extends Instruction {
         src = builder.buildOperand(getOperands().get(0), false, Mc.curIrFunction, getParent());
         addr = builder.buildOperand(getOperands().get(1), false, Mc.curIrFunction, getParent());
         offset = builder.buildImmeOperand(0, true, Mc.curIrFunction, getParent());
-        if(op1.getValueType() instanceof CharType){
-            builder.buildBinary(MipsBinary.BinaryType.AND, src, src, builder.buildImmeOperand(0xff, true, Mc.curIrFunction, getParent()), getParent());
-        }
+//        if(op1.getValueType() instanceof CharType){
+//            builder.buildBinary(MipsBinary.BinaryType.AND, src, src, builder.buildImmeOperand(0xff, true, Mc.curIrFunction, getParent()), getParent());
+//        }
 
         builder.buildStore(src, offset, addr, getParent());
     }

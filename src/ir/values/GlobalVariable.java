@@ -56,9 +56,6 @@ public class GlobalVariable extends User {
                 add(((ConstInt) initValue).getValue());
             }});
         } else if (initValue instanceof ConstChar) {
-//            mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.charType, new ArrayList<>(){{
-//                add(((ConstChar)initValue).getValue());
-//            }});
             mipsBuilder.buildGlobalVariable(getName(), MipsGlobalVariable.ValueType.intType, new ArrayList<>(){{
                 add(((ConstChar)initValue).getValue()&0xff);
             }});

@@ -42,7 +42,9 @@ public class Compiler {
         if(Settings.generateMips){ // 是否生成目标代码
             MipsBuilder.getInstance().buildMips(IrBuilder.getInstance().getModule());
             // 寄存器分配
-            RegBuilder.getInstance().process(MipsModule.getModule());
+            if(Settings.openRegAlloc){
+                RegBuilder.getInstance().process(MipsModule.getModule());
+            }
             MipsBuilder.getInstance().print();
         }
     }

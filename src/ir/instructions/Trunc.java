@@ -36,11 +36,12 @@ public class Trunc extends Instruction{
     @Override
     public void buildMips() {
         Value value = getOperands().get(0);
-        MipsBuilder builder = MipsBuilder.getInstance();
-        MipsOperand dst = builder.buildOperand(this, false, Mc.curIrFunction, getParent());
-        MipsOperand src = builder.buildOperand(value, false, Mc.curIrFunction, getParent());
-        MipsOperand num = new MipsImme(0xff);
-        // i32 -> i8
-        builder.buildBinary(MipsBinary.BinaryType.AND, dst, src, num, getParent());
+        // 好像为char的赋值不会超过127
+//        MipsOperand dst = builder.buildOperand(this, false, Mc.curIrFunction, getParent());
+//        MipsOperand src = builder.buildOperand(value, false, Mc.curIrFunction, getParent());
+//        MipsOperand num = new MipsImme(0xff);
+//        // i32 -> i8
+//        builder.buildBinary(MipsBinary.BinaryType.AND, dst, src, num, getParent());
+        Mc.addOperandMap(this, Mc.getMappedValue(value));
     }
 }

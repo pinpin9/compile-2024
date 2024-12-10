@@ -54,7 +54,9 @@ public class MipsMove extends MipsInstruction{
         } else if (src instanceof MipsLabel) {
             stringBuilder.append("la ").append(dst).append(", ").append(src).append("\n");
         } else {
-            stringBuilder.append("move ").append(dst).append(", ").append(src).append("\n");
+            if(!dst.equals(src)){
+                stringBuilder.append("move ").append(dst).append(", ").append(src).append("\n");
+            }
         }
         return stringBuilder.toString();
     }
