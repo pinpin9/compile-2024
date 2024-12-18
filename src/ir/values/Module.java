@@ -33,6 +33,10 @@ public class Module extends Value {
         globalVariableList.add(globalVariable);
     }
 
+    public List<Function> getFunctionList() {
+        return functionList;
+    }
+
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();

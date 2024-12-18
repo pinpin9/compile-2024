@@ -11,8 +11,8 @@ public class Instruction extends User {
     public Instruction(ValueType valueType, String name, BasicBlock basicBlock, ArrayList<Value> operands) {
         super(valueType, name, basicBlock, operands);
     }
-    public void delFromParent(Instruction instruction){
-        ((BasicBlock)getParent()).delInstruction(instruction);
+    public void delFromParent(){
+        getParent().delInstruction(this);
     }
 
     @Override

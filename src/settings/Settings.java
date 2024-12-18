@@ -14,4 +14,7 @@ public class Settings {
 
     // 是否开启图着色寄存器分配
     public static final boolean openRegAlloc = true;
+
+    // 是否开启窥孔优化
+    public static final boolean openPeephole = true;
 }

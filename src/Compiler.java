@@ -1,6 +1,7 @@
 import java.io.IOException;
 
 import backend.MipsBuilder;
+import backend.opt.Peephole;
 import backend.opt.RegBuilder;
 import backend.values.MipsModule;
 import frontend.LexicalAnalyze;
@@ -44,6 +45,10 @@ public class Compiler {
             // 寄存器分配
             if(Settings.openRegAlloc){
                 RegBuilder.getInstance().process(MipsModule.getModule());
+                // 窥孔优化
+                if(Settings.openPeephole){
+                    Peephole.process();
+                }
             }
             MipsBuilder.getInstance().print();
         }

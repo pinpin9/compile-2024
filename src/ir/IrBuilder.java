@@ -10,6 +10,7 @@ import ir.instructions.memory.Load;
 import ir.instructions.memory.Store;
 import ir.instructions.terminator.Br;
 import ir.instructions.terminator.Ret;
+import ir.process.DeadCodeRemove;
 import ir.types.IntType;
 import ir.types.ValueType;
 import ir.types.VoidType;
@@ -47,7 +48,10 @@ public class IrBuilder {
     }
 
     public void buildIr(CompUnit compUnit){
+        // 构建中间代码
         compUnit.buildIr();
+        // "温和"的死代码删除
+        DeadCodeRemove.analyze();
     }
 
     public String getName(){

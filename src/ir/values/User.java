@@ -19,6 +19,15 @@ public abstract class User extends Value{
         this.operands.addAll(operands);
     }
 
+    /**
+     * 删除操作数对应的被操作信息
+     */
+    public void dropOut(){
+        for(Value operand : operands){
+            operand.removeUser(this);
+        }
+    }
+
     // 增加操作数
     public void addOperand(Value value){
         this.operands.add(value);

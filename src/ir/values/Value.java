@@ -67,6 +67,10 @@ public class Value {
         userList.add(user);
     }
 
+    public void removeUser(User user){
+        userList.remove(user);
+    }
+
     public String getNameCnt(){
         return name.substring(1);
     }
