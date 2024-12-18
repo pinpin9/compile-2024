@@ -19,6 +19,7 @@ public class LiveVarInfo {
     private HashSet<MipsOperand> liveIn = new HashSet<>();
     private HashSet<MipsOperand> liveOut = new HashSet<>();
 
+
     /**
      * 对每个函数进行活跃变量分析
      * @return
