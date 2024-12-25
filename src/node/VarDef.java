@@ -167,22 +167,22 @@ public class VarDef extends Node{
     }
 
     private ValueType getValueType(){
-        switch (bType.getbType().getValue()){
-            case "int" ->{
+        switch (bType.getbType().getType()){
+            case INTTK ->{
                 return new IntType(32);
             }
-            case "char" ->{
+            case CHARTK ->{
                 return new CharType();
             }
         }
         return null;
     }
     private ValueType getValueType(int dim){
-        switch (bType.getbType().getValue()){
-            case "int" ->{
+        switch (bType.getbType().getType()){
+            case INTTK ->{
                 return new ArrayType(new IntType(32), dim);
             }
-            case "char" ->{
+            case CHARTK ->{
                 return new ArrayType(new CharType(), dim);
             }
         }
@@ -201,15 +201,15 @@ public class VarDef extends Node{
 
     private SymbolType getType(){
         if(lBrack == null){ // 非数组
-            if(bType.getbType().getValue().equals("int")){
+            if(bType.getbType().getType() == Token.TokenType.INTTK){
                 return SymbolType.Int;
-            } else if (bType.getbType().getValue().equals("char")) {
+            } else if (bType.getbType().getType() == Token.TokenType.CHARTK) {
                 return SymbolType.Char;
             }
         }else{ // 数组
-            if(bType.getbType().getValue().equals("int")){
+            if(bType.getbType().getType() == Token.TokenType.INTTK){
                 return SymbolType.IntArray;
-            } else if (bType.getbType().getValue().equals("char")) {
+            } else if (bType.getbType().getType() == Token.TokenType.CHARTK) {
                 return SymbolType.CharArray;
             }
         }

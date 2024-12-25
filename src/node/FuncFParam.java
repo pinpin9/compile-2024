@@ -41,11 +41,11 @@ public class FuncFParam extends Node{
     @Override
     public void buildIr() {
         ValueType valueType = null;
-        switch (bType.getbType().getValue()){
-            case "int"->{
+        switch (bType.getbType().getType()){
+            case INTTK->{
                 valueType = new IntType(32);
             }
-            case "char" -> {
+            case CHARTK -> {
                 valueType = new CharType();
             }
         }
@@ -63,15 +63,15 @@ public class FuncFParam extends Node{
 
     private Symbol.SymbolType getType(){
         if(lBrack == null){ // 非数组
-            if(bType.getbType().getValue().equals("int")){
+            if(bType.getbType().getType() == Token.TokenType.INTTK){
                 return Symbol.SymbolType.Int;
-            } else if (bType.getbType().getValue().equals("char")) {
+            } else if (bType.getbType().getType() == Token.TokenType.CHARTK) {
                 return Symbol.SymbolType.Char;
             }
         }else{ // 数组
-            if(bType.getbType().getValue().equals("int")){
+            if(bType.getbType().getType() == Token.TokenType.INTTK){
                 return Symbol.SymbolType.IntArray;
-            } else if (bType.getbType().getValue().equals("char")) {
+            } else if (bType.getbType().getType() == Token.TokenType.CHARTK) {
                 return Symbol.SymbolType.CharArray;
             }
         }

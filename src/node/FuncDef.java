@@ -62,14 +62,14 @@ public class FuncDef extends Node{
     @Override
     public void buildIr() {
         ValueType valueType = null;
-        switch (funcType.getFuncType().getValue()){
-            case "int" ->{
+        switch (funcType.getFuncType().getType()){
+            case INTTK ->{
                 valueType = new IntType(32);
             }
-            case "char" ->{
+            case CHARTK ->{
                 valueType = new CharType();
             }
-            case "void" ->{
+            case VOIDTK ->{
                 valueType = new VoidType();
             }
         }
@@ -143,14 +143,14 @@ public class FuncDef extends Node{
     }
 
     private SymbolType getType(){
-        switch (funcType.getFuncType().getValue()){
-            case "int" ->{
+        switch (funcType.getFuncType().getType()){
+            case INTTK ->{
                 return SymbolType.IntFunc;
             }
-            case "void" ->{
+            case VOIDTK ->{
                 return SymbolType.VoidFunc;
             }
-            case "char" ->{
+            case CHARTK ->{
                 return SymbolType.CharFunc;
             }
         }
@@ -158,6 +158,6 @@ public class FuncDef extends Node{
     }
 
     private boolean isVoidFunc(){
-        return funcType.getFuncType().getValue().equals("void");
+        return funcType.getFuncType().getType() == Token.TokenType.VOIDTK;
     }
 }
