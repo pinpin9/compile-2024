@@ -149,13 +149,13 @@ public class ConstDef extends Node{
         if(lBrack==null){ // 非数组
             if (bType.getbType().getType() == Token.TokenType.INTTK){
                 return SymbolType.ConstInt;
-            } else if (bType.getbType().getType() == Token.TokenType.CHARTK){ {
+            } else if (bType.getbType().getType() == Token.TokenType.CHARTK){
                 return SymbolType.ConstChar;
             }
         }else { // 数组
             if (bType.getbType().getType() == Token.TokenType.INTTK){
                 return SymbolType.ConstIntArray;
-            } else if (bType.getbType().getType() == Token.TokenType.CHARTK){ {
+            } else if (bType.getbType().getType() == Token.TokenType.CHARTK){
                 return SymbolType.ConstCharArray;
             }
         }
