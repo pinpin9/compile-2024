@@ -36,7 +36,7 @@ public class LexicalAnalyze {
             case "const":
                 type= Token.TokenType.CONSTTK;
                 break;
-            case "Integer":
+            case "int":
                 type= Token.TokenType.INTTK;
                 break;
             case "char":

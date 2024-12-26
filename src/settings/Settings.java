@@ -16,5 +16,5 @@ public class Settings {
     public static final boolean openRegAlloc = true;
 
     // 是否开启窥孔优化
-    public static final boolean openPeephole = true;
+    public static final boolean openPeephole = false;
 }

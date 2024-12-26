@@ -78,6 +78,8 @@ public class Call extends Instruction{
             MipsOperand src;
             if(i<4){ // 前四个参数，存入寄存器内
                 src = builder.buildOperand(irArg, true, Mc.curIrFunction, getParent());
+//                System.out.println(Mc.getMappedValue(irArg));
+//                System.out.println(src);
                 MipsMove move = builder.buildMove(new MipsPhyReg("a" + i), src, getParent());
                 callIns.addUseReg(move.getDst());
             } else { // 存入寄存器中

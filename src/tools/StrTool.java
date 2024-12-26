@@ -50,8 +50,8 @@ public class StrTool {
         String newString = string.replace("\\0A","\\n");
         int cnt = 0;
         for(int i = 0;i<newString.length();i++){
-            cnt ++;
-            if(string.charAt(i)=='\\'){
+            cnt++;
+            if(newString.charAt(i)=='\\'){
                 i++;
             }
         }
